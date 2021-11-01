@@ -6,20 +6,31 @@ noPermission:
 noConsole:
   chat: "&a&lChillCodeCheck &8» &cTa komenda nie może zostać wywołana z poziomu konsoli."
 
-# sekcja komend
 check:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check sprawdz <gracz> &7- rozpoczyna sprawdzanie danego gracza"
+
+  # wiadomość wyświetlana, gdy gracza nie ma na serwerze
   playerNotFound:
     chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
+
+  # wiadomość wyświetlana, gdy gracz chce sprawdzić samego siebie
   selfCheck:
     chat: "&a&lChillCodeCheck &8» &cNie możesz sprawdzać samego siebie!"
+
+  # wiadomość wyświetlana, gdy gracz jest już sprawdzany
   playerIsAlreadyChecked:
     chat: "&a&lChillCodeCheck &8» &cTen gracz jest już sprawdzany!"
+
+  # wiadomość wyświetlana, gdy sprawdzanie zostanie rozpoczęte
   checkstarting:
     chat: "&a&lChillCodeCheck &8» &7Rozpocząłeś sprawdzanie gracza &6{PLAYER_NAME}&7."
+
+  # wiadomość wyświetlana, jeśli gracz ma uprawnienie do bycia niesprawdzanym
   bypass:
     chat: "&a&lChillCodeCheck &8» &cTen gracz nie może być sprawdzany!"
+
   # wiadomość wyświetlana podczas bycia sprawdzanym
   checkingMessage:
     chat:
@@ -35,72 +46,114 @@ check:
       fadeOut: 1000
 
 setspawn:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check setspawn &7- ustawia miejsce sprawdzania"
+
+  # wiadomość wyświetlana, gdy wystąpi błąd podczas zapisu miejsca sprawdzania graczy
   saveError:
     chat: "&a&lChillCodeCheck &8» &cWystąpił problem podczas zapisu lokalizacji spawnu sprawdzania!"
+
+  # wiadomość wyświetlana, gdy gdy miejsce sprawdzania graczy zostanie pomyślnie ustawione i zapisane
   setspawn:
     chat: "&a&lChillCodeCheck &8» &7Pomyślnie ustawiono miejsce sprawdzania graczy."
 
 spawn:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check spawn &7- teleportuje na wyznaczone miejsce sprawdzania"
+
+  # wiadomość wyświetlana, gdy gracz zostanie przeteleportowany na miejsce sprawdzania
   spawn:
     chat: "&a&lChillCodeCheck &8» &7Zostałeś przeteleportowany na miejsce sprawdzania graczy."
 
 admitting:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check przyznanie <gracz> &7- przyznanie się do cheatów"
+
+  # wiadomość wyświetlana, gdy wskazany gracz nie jest sprawdzany
   playerNotChecked:
     chat: "&a&lChillCodeCheck &8» &cTen gracz nie jest sprawdzany!"
+
+  # wiadomość wyświetlana, gdy gracza nie ma na serwerze
   playerNotFound:
     chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
 
 clear:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check czysty <gracz> &7- nie wykryto cheatów"
+
+  # wiadomość wyświetlana, gdy gracz nie jest sprawdzany
   playerNotChecked:
     chat: "&a&lChillCodeCheck &8» &cTen gracz nie jest sprawdzany!"
+
+  # wiadomość wyświetlana, gdy gracza nie ma na serwerze
   playerNotFound:
     chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
+
+  # wiadomość wyświetlana, gdy okaże się, że gracz nie używa wspomagaczy
   clear:
     chat: "&a&lChillCodeCheck &8» &7Nie wykryto u Ciebie cheatów, przepraszamy za kłopot."
 
 cheater:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check cheater <gracz> &7- wykrycie cheatów"
+
+  # wiadomość wyświetlana, gdy gracz nie jest sprawdzany
   playerNotChecked:
     chat: "&a&lChillCodeCheck &8» &cTen gracz nie jest sprawdzany!"
+
+  # wiadomość wyświetlana, gdy gracz nie jest online
   playerNotFound:
     chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
 
 reload:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check reload &7- ponowne załadowanie ustawień pluginu"
+
+  # wiadomość wyświetlana, gdy pliki konfiguracyjne zostaną pomyślnie załadowane
   reload:
     chat: "&a&lChillCodeCheck &8» &7Pliki konfiguracyjne zostały pomyślnie przeładowane."
+
+  # wiadomość wyświetlana, gdy pliki konfiguracyjne nie zostaną poprawnie załadowane
   error:
     chat: "&a&lChillCodeCheck &8» &cWystąpił błąd podczas próby załadowania plików konfiguracyjnych."
 
 log:
+  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
   usage:
     chat: "&a&lChillCodeCheck &8» &6/check logs <gracz> &7- daty i przebieg sprawdzania gracza"
 
+# wiadomość wyświetlana, gdy gracz próbuje użyć komend będąc sprawdzanym
 useCommandWhileChecking:
   chat: "&a&lChillCodeCheck &8» &cNie możesz używać komend podczas sprawdzania!"
 
+# wiadomość wyświetlana, gdy gracz próbuje wyrzucać przedmiotu będąc sprawdzanym
 dropItemWhileChecking:
   chat: "&a&lChillCodeCheck &8» &cNie możesz wyrzucać przedmiotów podczas sprawdzania!"
 
 broadcast:
+  # wiadomość wyświetlana dla wszystkich, gdy gracz posiada cheaty
   cheater:
     chat: "&a&lChillCodeCheck &8» &7Wykryto niedozwolone oprogramowanie u gracza &6{PLAYER_NAME}&7."
+
+  # wiadomość wyświetlana dla wszystkich, gdy gracz się przyzna do używania wspomagaczy
   admitting:
     chat: "&a&lChillCodeCheck &8» &7Gracz &6{PLAYER_NAME} &7przyznał się do używania niedozwolonego oprogramowania."
+
+  # wiadomość wyświetlana dla wszystkich, gdy okaże się, że gracz nie używa wspomagaczy
   clear:
     chat: "&a&lChillCodeCheck &8» &7Nie wykryto niedozwolone oprogramowania u gracza &6{PLAYER_NAME}&7."
+
+  # wiadomość wyświetlana dla wszystkich, gdy gracz wyloguję się podczas sprawdzania
   logout:
     chat: "&a&lChillCodeCheck &8» &7Gracz &6{PLAYER_NAME} &7wylogował się podczas sprawdzania."
+
+  # wiadomość wyświetlana dla wszystkich, gdy rozpoczyna się sprawdzanie gracza
   checking:
     chat: "&a&lChillCodeCheck &8» &7Gracz &6{PLAYER_NAME} &7jest sprawdzany przez &6{ADMIN_NAME}&7."
 

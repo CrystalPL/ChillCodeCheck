@@ -49,6 +49,7 @@ allowedCommands:
 # ustaw na 0, jeśli nie chcesz mieć powiadomień o byciu sprawdzanym
 notifyTime: 20
 
+# format wiadomości wysyłanych na czacie, gdy gracz jest sprawdzany
 chatFormat:
   playerFormat: "&6{PLAYER_NAME} &8» &7{MESSAGE}"
   adminFormat: "&6{PLAYER_NAME} &8» &7{MESSAGE}"
