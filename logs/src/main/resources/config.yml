@@ -1,0 +1,43 @@
+database:
+  # typ przechowywania danych: SQLite, MongoDB, MYSQL
+  storageType: SQLITE
+
+  # sekcja settings odpowiada za konfiguracje połączenia w przypadku użycia MYSQL/MongoDB
+  settings:
+    # hostname - host bazy danych
+    hostname: "127.0.0.1"
+
+    # port — port bazy danych
+    port: "3306"
+
+    # database — nazwa bazy danych
+    database: "chillcode"
+
+    # username — nazwa użytkownika bazy danych
+    username: "root"
+
+    # password — hasło do bazy danych
+    password: "admin"
+
+    # useSSL — czy ma być używany SSL podczas leczenia z bazą danych
+    useSSL: "false"
+
+    # poolSize — maksymalna liczba połączeń z bazą danych
+    poolSize: 5
+
+    # connectionTimeout — czas oczekiwania na połączenie z bazą danych
+    connectionTimeout: 20000
+
+    # przedrostek, jaki ma występować w nazwach tabel (SQLite, MYSQL) lub kolekcji (MongoDB)
+    prefix: "chillcode_logs_"
+
+  sqlite:
+    # nazwa bazy danych w przypadku użycia SQLite
+    fileName: data/data.db
+
+# format daty
+dateTimeFormatter: "yyyy-MM-dd HH:mm:ss"
+
+chatFormat:
+  playerFormat: "&6{PLAYER_NAME} &8» &7{MESSAGE}"
+  adminFormat: "&6{PLAYER_NAME} &8» &7{MESSAGE}"

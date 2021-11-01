@@ -1,0 +1,118 @@
+# wiadomość wyświetlana, gdy gracz nie ma uprawnień do użycia komendy
+noPermission:
+  chat: "&a&lChillCodeCheck &8» &cBrak uprawnień &7(&6{PERMISSION}&7)."
+
+# wiadomość wyświetlana, gdy komenda zostanie wywołana z konsoli
+noConsole:
+  chat: "&a&lChillCodeCheck &8» &cTa komenda nie może zostać wywołana z poziomu konsoli."
+
+# sekcja komend
+check:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check sprawdz <gracz> &7- rozpoczyna sprawdzanie danego gracza"
+  playerNotFound:
+    chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
+  selfCheck:
+    chat: "&a&lChillCodeCheck &8» &cNie możesz sprawdzać samego siebie!"
+  playerIsAlreadyChecked:
+    chat: "&a&lChillCodeCheck &8» &cTen gracz jest już sprawdzany!"
+  checkstarting:
+    chat: "&a&lChillCodeCheck &8» &7Rozpocząłeś sprawdzanie gracza &6{PLAYER_NAME}&7."
+  bypass:
+    chat: "&a&lChillCodeCheck &8» &cTen gracz nie może być sprawdzany!"
+  # wiadomość wyświetlana podczas bycia sprawdzanym
+  checkingMessage:
+    chat:
+      - "- - - - - - - - - - - - - -"
+      - "&4&lSPRAWDZANIE"
+      - "&fMasz 3 minuty na wejscie, na ts3 &6teamspeak.pl!"
+      - "- - - - - - - - - - - - - -"
+    title:
+      title: "&4&lSPRAWDZANIE"
+      subtitle: "&c&lWspółpracuj z adminem"
+      fadeIn: 1000
+      stay: 1500
+      fadeOut: 1000
+
+setspawn:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check setspawn &7- ustawia miejsce sprawdzania"
+  saveError:
+    chat: "&a&lChillCodeCheck &8» &cWystąpił problem podczas zapisu lokalizacji spawnu sprawdzania!"
+  setspawn:
+    chat: "&a&lChillCodeCheck &8» &7Pomyślnie ustawiono miejsce sprawdzania graczy."
+
+spawn:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check spawn &7- teleportuje na wyznaczone miejsce sprawdzania"
+  spawn:
+    chat: "&a&lChillCodeCheck &8» &7Zostałeś przeteleportowany na miejsce sprawdzania graczy."
+
+admitting:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check przyznanie <gracz> &7- przyznanie się do cheatów"
+  playerNotChecked:
+    chat: "&a&lChillCodeCheck &8» &cTen gracz nie jest sprawdzany!"
+  playerNotFound:
+    chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
+
+clear:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check czysty <gracz> &7- nie wykryto cheatów"
+  playerNotChecked:
+    chat: "&a&lChillCodeCheck &8» &cTen gracz nie jest sprawdzany!"
+  playerNotFound:
+    chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
+  clear:
+    chat: "&a&lChillCodeCheck &8» &7Nie wykryto u Ciebie cheatów, przepraszamy za kłopot."
+
+cheater:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check cheater <gracz> &7- wykrycie cheatów"
+  playerNotChecked:
+    chat: "&a&lChillCodeCheck &8» &cTen gracz nie jest sprawdzany!"
+  playerNotFound:
+    chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
+
+reload:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check reload &7- ponowne załadowanie ustawień pluginu"
+  reload:
+    chat: "&a&lChillCodeCheck &8» &7Pliki konfiguracyjne zostały pomyślnie przeładowane."
+  error:
+    chat: "&a&lChillCodeCheck &8» &cWystąpił błąd podczas próby załadowania plików konfiguracyjnych."
+
+log:
+  usage:
+    chat: "&a&lChillCodeCheck &8» &6/check logs <gracz> &7- daty i przebieg sprawdzania gracza"
+
+useCommandWhileChecking:
+  chat: "&a&lChillCodeCheck &8» &cNie możesz używać komend podczas sprawdzania!"
+
+dropItemWhileChecking:
+  chat: "&a&lChillCodeCheck &8» &cNie możesz wyrzucać przedmiotów podczas sprawdzania!"
+
+broadcast:
+  cheater:
+    chat: "&a&lChillCodeCheck &8» &7Wykryto niedozwolone oprogramowanie u gracza &6{PLAYER_NAME}&7."
+  admitting:
+    chat: "&a&lChillCodeCheck &8» &7Gracz &6{PLAYER_NAME} &7przyznał się do używania niedozwolonego oprogramowania."
+  clear:
+    chat: "&a&lChillCodeCheck &8» &7Nie wykryto niedozwolone oprogramowania u gracza &6{PLAYER_NAME}&7."
+  logout:
+    chat: "&a&lChillCodeCheck &8» &7Gracz &6{PLAYER_NAME} &7wylogował się podczas sprawdzania."
+  checking:
+    chat: "&a&lChillCodeCheck &8» &7Gracz &6{PLAYER_NAME} &7jest sprawdzany przez &6{ADMIN_NAME}&7."
+
+# wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
+usage:
+  chat:
+    - "&a&lChillCodeCheck &8» &6/check help &7- wyświetla wszystkie dostępne komendy"
+    - "&a&lChillCodeCheck &8» &6/check setspawn &7- ustawia miejsce teleportu graczy podczas sprawdzania "
+    - "&a&lChillCodeCheck &8» &6/check spawn &7- teleportuje na wyznaczone miejsce sprawdzania"
+    - "&a&lChillCodeCheck &8» &6/check sprawdz <gracz> &7- rozpoczyna sprawdzanie danego gracza"
+    - "&a&lChillCodeCheck &8» &6/check przyznanie <gracz> &7- przyznanie się do cheatów"
+    - "&a&lChillCodeCheck &8» &6/check czysty <gracz> &7- nie wykryto cheatów"
+    - "&a&lChillCodeCheck &8» &6/check cheater <gracz> &7- wykrycie cheatów"
+    - "&a&lChillCodeCheck &8» &6/check reload &7- ponowne załadowanie ustawień pluginu"
+    - "&a&lChillCodeCheck &8» &6/check logs <gracz> &7- daty i przebieg sprawdzania gracza"

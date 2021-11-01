@@ -1,0 +1,54 @@
+# Konfiguracja komendy /check
+command:
+  check:
+    name: "check"
+    aliases: "sprawdz"
+
+# znak poprzedzający wiadomość, gdy ma zostać wysłana do sprawdzanego gracza
+adminChatChar: '#'
+
+# komenda jaka ma zostać wywołana, gdy gracz ma cheaty
+commandsWhenPlayerCheating:
+  - ban {PLAYER_NAME} 15d Wykryto cheaty
+
+# komenda jaka ma zostać wywołana, gdy gracz się przyzna do cheatów
+commandsWhenPlayerAdmitting:
+  - ban {PLAYER_NAME} 5d &2&lPrzyznanie się do czitów
+
+# komenda jaka ma zostać wywołana, gdy gracz się wylogował podczas sprawdzania
+commandsWhenPlayerLogout:
+  - ban {PLAYER_NAME} 15d &4&lWylogowanie się podczas sprawdzania
+
+# czy mają być wyświetlane wiadomości o rezultacie sprawdzania
+# tj. czy gracz został zbanowany/wylogował się/nie miał cheatów
+broadcastMessage: true
+
+# czy gracz ma być przeniesiony na swoja poprzednie lokalizację czy na dane koordynaty
+backPlayerToPreviousLocation: true
+teleportPlayerAfterCheck:
+  world: world
+  x: 100.0
+  y: 100.0
+  z: 100.0
+  yaw: 10.0
+  pitch: 10.0
+
+# czy gracz może wyrzucać itemy podczas sprawdzania
+dropItem: false
+
+# czy gracz może używać komend innych niż wybranych poniżej
+allowedUseCommands: false
+
+# komendy jakie może używać gracz podczas sprawdzania
+allowedCommands:
+  - helpop
+  - msg
+
+# czas powiadomień o sprawdzaniu
+# w tick'ach
+# ustaw na 0, jeśli nie chcesz mieć powiadomień o byciu sprawdzanym
+notifyTime: 20
+
+chatFormat:
+  playerFormat: "&6{PLAYER_NAME} &8» &7{MESSAGE}"
+  adminFormat: "&6{PLAYER_NAME} &8» &7{MESSAGE}"

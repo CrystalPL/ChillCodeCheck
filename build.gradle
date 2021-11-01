@@ -1,0 +1,48 @@
+plugins {
+    id 'java-library'
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+allprojects {
+    group = 'pl.chillcode'
+    version = '1.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'spigotmc-repo'
+            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        }
+        maven {
+            name = 'sonatype'
+            url = 'https://oss.sonatype.org/content/groups/public/'
+        }
+        flatDir {
+            dirs new File(rootDir, 'libs')
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+        compileOnly 'org.projectlombok:lombok:1.18.22'
+        annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    }
+
+
+    shadowJar {
+        minimize()
+        archiveFileName = "$baseName.$extension"
+        classifier(null)
+        destinationDirectory.set(new File("F:\\Minecraft\\minecraft1.8.8\\plugins"))
+    }
+}

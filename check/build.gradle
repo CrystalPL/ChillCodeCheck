@@ -1,0 +1,9 @@
+dependencies {
+    implementation name: "CrCAPICore"
+    implementation name: "CrCAPIMessage"
+}
+
+shadowJar {
+    relocate 'pl.crystalek.crcapi', 'pl.chillcode.check.lib.api'
+    archiveFileName = "ChillCodeCheck.jar"
+}

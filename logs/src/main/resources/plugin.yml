@@ -1,0 +1,5 @@
+name: ChillCodeCheck-Logs
+version: 1.0
+main: pl.chillcode.logs.ChillCodeLogs
+authors: [ Crystal ]
+depend: [ ChillCodeCheck ]

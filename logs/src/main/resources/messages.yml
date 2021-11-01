@@ -1,0 +1,42 @@
+playerNotFound:
+  chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
+
+notChecked:
+  chat: "&a&lChillCodeCheck &8» &cGracz &6{PLAYER_NAME} &cnie był nigdy sprawdzany."
+
+showLogs:
+  log:
+    chat:
+      1:
+        message: "&a&lChillCodeCheck &8» &7Najedź na tą wiadomość, aby zobaczyć podstawowe informacje o sprawdzaniu. Kliknij na tą wiadomość, aby zobaczyć szczegóły sprawdzania."
+        hover:
+          - "&6Administrator: &7{ADMIN_NAME}"
+          - "&6Data: &7{DATE}"
+          - "&6Rezultat: &7{RESULT}"
+  details:
+    chat:
+      - "&a&lChillCodeCheck &8» &7Logi sprawdzania gracza &6{PLAYER_NAME}"
+      - "&6Administrator: &7{ADMIN_NAME}"
+      - "&6Rezultat: &7{RESULT}"
+      - "&6Czas rozpoczęcia sprawdzania: &7{CHECKSTART_TIME}"
+      - "&6Czas zakończenia sprawdzania: &7{CHECKEND_TIME}"
+      - "&6Logi wiadomości:"
+      - "{MESSAGE_LIST}"
+  message:
+    chat:
+      1:
+        message: "{CHAT_FORMAT}"
+        hover: "&6Data wysłania wiadomości: &7{MESSAGE_SENT_TIME}"
+
+checkResult:
+  cheater:
+    chat: "czitowanie"
+  clear:
+    chat: "czysty"
+  logout:
+    chat: "wylogowanie się podczas sprwaedzania"
+  admitting:
+    chat: "przyznanie do czitów"
+
+showDetailsError:
+  chat: "&a&lChillCodeCheck &8» &cWystąpił problem podczas próby wyświetlenia szczegółów sprawdzania!"

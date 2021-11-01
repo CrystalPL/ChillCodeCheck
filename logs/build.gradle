@@ -1,0 +1,11 @@
+dependencies {
+    shadow project (":check")
+    implementation name: "CrCAPICore"
+    implementation name: "CrCAPIMessage"
+    implementation name: "CrCAPIDatabase"
+}
+
+shadowJar {
+    relocate 'pl.crystalek.crcapi', 'pl.chillcode.logs.lib.api'
+    archiveFileName = "ChillCodeCheck-Logs.jar"
+}
