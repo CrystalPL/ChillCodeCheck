@@ -22,7 +22,6 @@ public final class CheckCommand extends Command {
     public CheckCommand(final Config config, final CheckCache checkCache, final ChillCodeCheck plugin) {
         super(config.getPlayerCheckCommand());
         setAliases(config.getPlayerCheckCommandAliases());
-        System.out.println("siema test");
 
         registerSubCommand("help", new HelpSubCommand(), true);
         registerSubCommand("setspawn", new SetSpawnSubCommand(config), true);
