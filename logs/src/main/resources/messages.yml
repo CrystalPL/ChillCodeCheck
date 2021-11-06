@@ -1,10 +1,16 @@
+# wiadomość wyświetlana, gdy podanego gracza nigdy nie było na serwerze
 playerNotFound:
   chat: "&a&lChillCodeCheck &8» &cNie znaleziono takiego gracza!"
 
+# wiadomość wyświetlana, gdy gracz nigdy nie był sprawdzany
 notChecked:
   chat: "&a&lChillCodeCheck &8» &cGracz &6{PLAYER_NAME} &cnie był nigdy sprawdzany."
 
+# wiadomość wyświetlająca logi
 showLogs:
+  # {ADMIN_NAME} - nick administratora
+  # {DATE} - data sprawdzania
+  # {RESULT} - rezultat sprawdzania, np. zbanowany, czysty itd
   log:
     chat:
       1:
@@ -13,6 +19,14 @@ showLogs:
           - "&6Administrator: &7{ADMIN_NAME}"
           - "&6Data: &7{DATE}"
           - "&6Rezultat: &7{RESULT}"
+
+  # wiadomość pokazująca szczegóły sprawdzania
+  # {PLAYER_NAME} - nick sprawdzanego gracza
+  # {ADMIN_NAME} - nick administratora, który sprawdzał gracza
+  # {RESULT} - rezultat sprawdzania, np. zbanowany, czysty itd.
+  # {CHECKSTART_TIME} - data rozpoczęcia sprawdzania
+  # {CHECKEND_TIME} - data zakończenia sprawdzania
+  # {MESSAGE_LIST} - lista wiadomości między graczem a administratorem
   details:
     chat:
       - "&a&lChillCodeCheck &8» &7Logi sprawdzania gracza &6{PLAYER_NAME}"
@@ -22,21 +36,34 @@ showLogs:
       - "&6Czas zakończenia sprawdzania: &7{CHECKEND_TIME}"
       - "&6Logi wiadomości:"
       - "{MESSAGE_LIST}"
+
+  # wiadomość pokazująca wiadomości między graczem a administratorem
+  # {CHAT_FORMAT} - format chatu, do ustawienia w config.yml
+  # {MESSAGE_SENT_TIME} - data wysyłania wiadomości
   message:
     chat:
       1:
         message: "{CHAT_FORMAT}"
         hover: "&6Data wysłania wiadomości: &7{MESSAGE_SENT_TIME}"
 
+# zmienne wyświetląjace się podczas wyświetlenia szczegółów sprawdzania
 checkResult:
+  # gdy u gracz wykryto cheaty
   cheater:
     chat: "czitowanie"
+
+  # gdy gracz nie miał cheatów
   clear:
     chat: "czysty"
+
+  # gdy gracz się wylogował
   logout:
     chat: "wylogowanie się podczas sprwaedzania"
+
+  # gdy gracz się przyznał do cheatów
   admitting:
     chat: "przyznanie do czitów"
 
+# wiadomość wyświetlana, gdy wystąpi nieoczekiwany błąd podczas wyświetlania szczegółów sprawdzania
 showDetailsError:
   chat: "&a&lChillCodeCheck &8» &cWystąpił problem podczas próby wyświetlenia szczegółów sprawdzania!"
