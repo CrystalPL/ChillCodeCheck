@@ -32,6 +32,7 @@ check:
     chat: "&a&lChillCodeCheck &8» &cTen gracz nie może być sprawdzany!"
 
   # wiadomość wyświetlana podczas bycia sprawdzanym
+  # {ADMIN_NAME} - nick administratora sprawdzającego gracza
   checkingMessage:
     chat:
       - "- - - - - - - - - - - - - -"
