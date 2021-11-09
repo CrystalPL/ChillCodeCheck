@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +17,7 @@ import pl.chillcode.check.model.CheckResult;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public final class PlayerQuitListener implements Listener {
+    ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
     CheckCache checkCache;
     Config config;
 
@@ -28,6 +30,6 @@ public final class PlayerQuitListener implements Listener {
             return;
         }
 
-        config.getCommandsWhenPlayerLogout().forEach(command -> Bukkit.dispatchCommand(player, command.replace("{PLAYER_NAME}", player.getName())));
+        config.getCommandsWhenPlayerLogout().forEach(command -> Bukkit.dispatchCommand(console, command.replace("{PLAYER_NAME}", player.getName())));
     }
 }

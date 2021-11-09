@@ -17,6 +17,7 @@ public final class MYSQLProvider extends SQLProvider {
         super(sqlUtil, databaseConfig);
 
         this.insertUser = String.format("INSERT INTO %suser (nickname, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname = ?;", databaseConfig.getPrefix());
+        this.createTable();
     }
 
     @Override
