@@ -42,11 +42,12 @@ public final class ChillCodeCheck extends JavaPlugin {
             return;
         }
 
+        HandlerList.unregisterAll(this);
         loadMessage();
         checkCache = new CheckCache(config, this, messageAPI);
-        registerListeners();
         checkCommand = new CheckCommand(config, checkCache, this, messageAPI);
         CommandRegistry.register(checkCommand);
+        registerListeners();
     }
 
     @Override
@@ -95,12 +96,11 @@ public final class ChillCodeCheck extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return false;
         }
+
         return true;
     }
 
     public void registerListeners() {
-        HandlerList.unregisterAll(this);
-
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
         pluginManager.registerEvents(new AsyncPlayerChatListener(checkCache, config), this);
