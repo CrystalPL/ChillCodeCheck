@@ -19,7 +19,6 @@ import pl.crystalek.crcapi.command.CommandRegistry;
 import pl.crystalek.crcapi.config.ConfigHelper;
 import pl.crystalek.crcapi.config.FileHelper;
 import pl.crystalek.crcapi.message.MessageAPI;
-import pl.crystalek.crcapi.util.LogUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,20 +31,22 @@ public final class ChillCodeCheck extends JavaPlugin {
     CheckCache checkCache;
     @Getter
     CheckCommand checkCommand;
+    MessageAPI messageAPI;
+
 
     @Override
     public void onEnable() {
-        spawnLocationFileHelper = new FileHelper("spawnLocation.yml");
-        configHelper = new ConfigHelper("config.yml");
+        spawnLocationFileHelper = new FileHelper("spawnLocation.yml", this);
+        configHelper = new ConfigHelper("config.yml", this);
         if (!loadFiles()) {
             return;
         }
 
-        checkCache = new CheckCache(config, this);
-        registerListeners();
-        checkCommand = new CheckCommand(config, checkCache, this);
-        CommandRegistry.register(checkCommand);
         loadMessage();
+        checkCache = new CheckCache(config, this, messageAPI);
+        registerListeners();
+        checkCommand = new CheckCommand(config, checkCache, this, messageAPI);
+        CommandRegistry.register(checkCommand);
     }
 
     @Override
@@ -61,7 +62,8 @@ public final class ChillCodeCheck extends JavaPlugin {
     }
 
     public boolean loadMessage() {
-        return new MessageAPI().init();
+        this.messageAPI = new MessageAPI(this);
+        return messageAPI.init();
     }
 
     public boolean loadFiles() {
@@ -69,8 +71,8 @@ public final class ChillCodeCheck extends JavaPlugin {
             spawnLocationFileHelper.checkExist();
             spawnLocationFileHelper.load();
         } catch (final IOException exception) {
-            LogUtil.error("Nie udało się utworzyć pliku z lokalizacją spawnu..");
-            LogUtil.error("Wyłączanie pluginu");
+            getLogger().severe("Nie udało się utworzyć pliku z lokalizacją spawnu..");
+            getLogger().severe("Wyłączanie pluginu");
             Bukkit.getPluginManager().disablePlugin(this);
             exception.printStackTrace();
             return false;
@@ -80,8 +82,8 @@ public final class ChillCodeCheck extends JavaPlugin {
             configHelper.checkExist();
             configHelper.load();
         } catch (final IOException exception) {
-            LogUtil.error("Nie udało się utworzyć pliku konfiguracyjnego..");
-            LogUtil.error("Wyłączanie pluginu");
+            getLogger().severe("Nie udało się utworzyć pliku konfiguracyjnego..");
+            getLogger().severe("Wyłączanie pluginu");
             Bukkit.getPluginManager().disablePlugin(this);
             exception.printStackTrace();
             return false;
@@ -89,7 +91,7 @@ public final class ChillCodeCheck extends JavaPlugin {
 
         config = new Config(configHelper.getConfiguration(), spawnLocationFileHelper);
         if (!config.load()) {
-            LogUtil.error("Wyłączanie pluginu..");
+            getLogger().severe("Wyłączanie pluginu");
             Bukkit.getPluginManager().disablePlugin(this);
             return false;
         }
@@ -105,11 +107,11 @@ public final class ChillCodeCheck extends JavaPlugin {
         pluginManager.registerEvents(new PlayerQuitListener(checkCache, config), this);
 
         if (!config.isAllowedUseCommands()) {
-            pluginManager.registerEvents(new PlayerCommandListener(checkCache, config), this);
+            pluginManager.registerEvents(new PlayerCommandListener(checkCache, config, messageAPI), this);
         }
 
         if (!config.isDropItem()) {
-            pluginManager.registerEvents(new PlayerDropItemListener(checkCache), this);
+            pluginManager.registerEvents(new PlayerDropItemListener(checkCache, messageAPI), this);
         }
     }
 }

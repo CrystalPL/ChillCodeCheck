@@ -20,22 +20,23 @@ import java.util.stream.Collectors;
 public final class AdmittingSubCommand implements SubCommand {
     CheckCache checkCache;
     Config config;
+    MessageAPI messageAPI;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (!(sender instanceof Player)) {
-            MessageAPI.sendMessage("noConsole", sender);
+            messageAPI.sendMessage("noConsole", sender);
             return;
         }
 
         final Player player = Bukkit.getPlayer(args[1]);
         if (player == null) {
-            MessageAPI.sendMessage("admitting.playerNotFound", sender);
+            messageAPI.sendMessage("admitting.playerNotFound", sender);
             return;
         }
 
         if (checkCache.clear(player, CheckResult.ADMITTING) == null) {
-            MessageAPI.sendMessage("admitting.playerNotChecked", sender);
+            messageAPI.sendMessage("admitting.playerNotChecked", sender);
             return;
         }
 
@@ -59,7 +60,8 @@ public final class AdmittingSubCommand implements SubCommand {
 
     @Override
     public List<String> tabComplete(final CommandSender sender, final String[] args) {
-        return checkCache.getPlayerCheckList().stream().map(check -> check.getPlayer().getName()).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());    }
+        return checkCache.getPlayerCheckList().stream().map(check -> check.getPlayer().getName()).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+    }
 
     @Override
     public String usagePathMessage() {

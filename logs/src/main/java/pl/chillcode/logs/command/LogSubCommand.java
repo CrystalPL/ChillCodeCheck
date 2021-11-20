@@ -8,15 +8,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.chillcode.check.command.SubCommand;
-import pl.chillcode.check.model.CheckResult;
 import pl.chillcode.logs.config.Config;
 import pl.chillcode.logs.exception.LogNotExistException;
 import pl.chillcode.logs.exception.PlayerNotFoundException;
 import pl.chillcode.logs.log.Log;
 import pl.chillcode.logs.log.LogCache;
 import pl.chillcode.logs.user.PlayerNicknameCache;
-import pl.crystalek.crcapi.lib.adventure.text.Component;
-import pl.crystalek.crcapi.lib.adventure.text.event.ClickEvent;
+import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
+import pl.crystalek.crcapi.lib.adventure.adventure.text.event.ClickEvent;
 import pl.crystalek.crcapi.message.MessageAPI;
 import pl.crystalek.crcapi.message.loader.MessageUtil;
 
@@ -37,6 +36,8 @@ public final class LogSubCommand implements SubCommand {
     LogCache logCache;
     Component showLogsComponent;
     String runningCommand;
+    MessageAPI messageAPI;
+    ResultUtil resultUtil;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
@@ -45,10 +46,10 @@ public final class LogSubCommand implements SubCommand {
             try {
                 logs = logCache.getLogs(args[1]);
             } catch (final PlayerNotFoundException exception) {
-                MessageAPI.sendMessage("playerNotFound", sender);
+                messageAPI.sendMessage("playerNotFound", sender);
                 return;
             } catch (final LogNotExistException exception) {
-                MessageAPI.sendMessage("notChecked", sender, ImmutableMap.of("{PLAYER_NAME}", args[1]));
+                messageAPI.sendMessage("notChecked", sender, ImmutableMap.of("{PLAYER_NAME}", args[1]));
                 return;
             }
 
@@ -66,7 +67,7 @@ public final class LogSubCommand implements SubCommand {
                         "{DATE}", checkStartTime
                 );
                 final Component component = MessageUtil.replace(showLogsComponent, replacements);
-                MessageAPI.sendMessage(component, sender, ImmutableMap.of("{RESULT}", ResultUtil.getResultComponent(log.getCheckResult())));
+                messageAPI.sendMessage(component, sender, ImmutableMap.of("{RESULT}", resultUtil.getResultComponent(log.getCheckResult())));
             }
         });
     }

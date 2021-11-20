@@ -18,49 +18,51 @@ import java.util.stream.Collectors;
 public final class CheckCommand extends Command {
     Map<String, SubCommand> subCommandMap = new HashMap<>();
     Set<String> argumentList = new HashSet<>();
+    MessageAPI messageAPI;
 
-    public CheckCommand(final Config config, final CheckCache checkCache, final ChillCodeCheck plugin) {
+    public CheckCommand(final Config config, final CheckCache checkCache, final ChillCodeCheck plugin, final MessageAPI messageAPI) {
         super(config.getPlayerCheckCommand());
         setAliases(config.getPlayerCheckCommandAliases());
+        this.messageAPI = messageAPI;
 
-        registerSubCommand("help", new HelpSubCommand(), true);
-        registerSubCommand("setspawn", new SetSpawnSubCommand(config), true);
-        registerSubCommand("spawn", new SpawnSubCommand(config), true);
-        registerSubCommand("sprawdz", new CheckSubCommand(checkCache, config), true);
-        registerSubCommand("przyznanie", new AdmittingSubCommand(checkCache, config), true);
-        registerSubCommand("czysty", new ClearSubCommand(checkCache, config), true);
-        registerSubCommand("cheater", new CheaterSubCommand(checkCache, config), true);
-        registerSubCommand("reload", new ReloadSubCommand(plugin), true);
+        registerSubCommand("help", new HelpSubCommand(messageAPI), true);
+        registerSubCommand("setspawn", new SetSpawnSubCommand(config, messageAPI), true);
+        registerSubCommand("spawn", new SpawnSubCommand(config, messageAPI), true);
+        registerSubCommand("sprawdz", new CheckSubCommand(checkCache, config, messageAPI), true);
+        registerSubCommand("przyznanie", new AdmittingSubCommand(checkCache, config, messageAPI), true);
+        registerSubCommand("czysty", new ClearSubCommand(checkCache, config, messageAPI), true);
+        registerSubCommand("cheater", new CheaterSubCommand(checkCache, config, messageAPI), true);
+        registerSubCommand("reload", new ReloadSubCommand(plugin, messageAPI), true);
     }
 
     @Override
     public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
         if (!sender.hasPermission("chillcode.check.base")) {
-            MessageAPI.sendMessage("noPermission", sender, ImmutableMap.of("{PERMISSION}", "chillcode.check.base"));
+            messageAPI.sendMessage("noPermission", sender, ImmutableMap.of("{PERMISSION}", "chillcode.check.base"));
             return true;
         }
 
         final int argLength = args.length;
         if (argLength == 0) {
-            MessageAPI.sendMessage("usage", sender);
+            messageAPI.sendMessage("usage", sender);
             return true;
         }
 
         final String firstArgument = args[0].toLowerCase();
         if (!subCommandMap.containsKey(firstArgument)) {
-            MessageAPI.sendMessage("usage", sender);
+            messageAPI.sendMessage("usage", sender);
             return true;
         }
         final SubCommand subCommand = subCommandMap.get(firstArgument);
 
         final String permission = subCommand.getPermission();
         if (!sender.hasPermission(permission)) {
-            MessageAPI.sendMessage("noPermission", sender, ImmutableMap.of("{PERMISSION}", permission));
+            messageAPI.sendMessage("noPermission", sender, ImmutableMap.of("{PERMISSION}", permission));
             return true;
         }
 
         if (argLength < subCommand.minArgumentLength() || argLength > subCommand.maxArgumentLength()) {
-            MessageAPI.sendMessage(subCommand.usagePathMessage(), sender);
+            messageAPI.sendMessage(subCommand.usagePathMessage(), sender);
             return true;
         }
 

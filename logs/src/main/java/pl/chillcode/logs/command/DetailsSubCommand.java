@@ -13,7 +13,7 @@ import pl.chillcode.logs.log.Log;
 import pl.chillcode.logs.log.LogCache;
 import pl.chillcode.logs.log.MessageLog;
 import pl.chillcode.logs.user.PlayerNicknameCache;
-import pl.crystalek.crcapi.lib.adventure.text.Component;
+import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
 import pl.crystalek.crcapi.message.MessageAPI;
 import pl.crystalek.crcapi.message.loader.MessageUtil;
 
@@ -34,6 +34,8 @@ public final class DetailsSubCommand implements SubCommand {
     LogCache logCache;
     Component detailsComponent;
     Component messageLogComponent;
+    MessageAPI messageAPI;
+    ResultUtil resultUtil;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
@@ -41,10 +43,10 @@ public final class DetailsSubCommand implements SubCommand {
         try {
             logs = logCache.getLogs(args[1]);
         } catch (final LogNotExistException exception) {
-            MessageAPI.sendMessage("notChecked", sender, ImmutableMap.of("{PLAYER_NAME}", args[1]));
+            messageAPI.sendMessage("notChecked", sender, ImmutableMap.of("{PLAYER_NAME}", args[1]));
             return;
         } catch (final PlayerNotFoundException exception) {
-            MessageAPI.sendMessage("playerNotFound", sender);
+            messageAPI.sendMessage("playerNotFound", sender);
             return;
         }
 
@@ -52,7 +54,7 @@ public final class DetailsSubCommand implements SubCommand {
         try {
             logIndex = Integer.parseInt(args[2]);
         } catch (final NumberFormatException exception) {
-            MessageAPI.sendMessage("showDetailsError", sender);
+            messageAPI.sendMessage("showDetailsError", sender);
             return;
         }
 
@@ -92,11 +94,11 @@ public final class DetailsSubCommand implements SubCommand {
         }
 
         final Map<String, Component> detailsComponentReplacements = ImmutableMap.of(
-                "{RESULT}", ResultUtil.getResultComponent(log.getCheckResult()),
+                "{RESULT}", resultUtil.getResultComponent(log.getCheckResult()),
                 "{MESSAGE_LIST}", messageListComponent);
 
         final Component component = MessageUtil.replace(detailsComponent, detailsReplacements);
-        MessageAPI.sendMessage(component, sender, detailsComponentReplacements);
+        messageAPI.sendMessage(component, sender, detailsComponentReplacements);
     }
 
     @Override

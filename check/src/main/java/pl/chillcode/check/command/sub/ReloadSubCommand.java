@@ -15,21 +15,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class ReloadSubCommand implements SubCommand {
     ChillCodeCheck plugin;
+    MessageAPI messageAPI;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (!plugin.loadFiles()) {
-            MessageAPI.sendMessage("reload.error", sender);
+            messageAPI.sendMessage("reload.error", sender);
             return;
         }
 
         if (!plugin.loadMessage()) {
-            MessageAPI.sendMessage("reload.error", sender);
+            messageAPI.sendMessage("reload.error", sender);
             return;
         }
 
         plugin.registerListeners();
-        MessageAPI.sendMessage("reload.reload", sender);
+        messageAPI.sendMessage("reload.reload", sender);
     }
 
     @Override

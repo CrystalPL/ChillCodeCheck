@@ -1,5 +1,8 @@
 package pl.chillcode.check.command.sub;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.command.CommandSender;
 import pl.chillcode.check.command.SubCommand;
 import pl.crystalek.crcapi.message.MessageAPI;
@@ -7,10 +10,14 @@ import pl.crystalek.crcapi.message.MessageAPI;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class HelpSubCommand implements SubCommand {
+    MessageAPI messageAPI;
+
     @Override
     public void execute(final CommandSender sender, final String[] args) {
-        MessageAPI.sendMessage("usage", sender);
+        messageAPI.sendMessage("usage", sender);
     }
 
     @Override

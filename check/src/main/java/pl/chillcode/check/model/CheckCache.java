@@ -22,9 +22,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public final class CheckCache {
+    List<Check> playerCheckList = new ArrayList<>();
     Config config;
     JavaPlugin plugin;
-    List<Check> playerCheckList = new ArrayList<>();
+    MessageAPI messageAPI;
 
     public boolean checkPlayer(final Player admin, final Player player) {
         if (playerCheckList.stream().anyMatch(check -> check.getPlayer().equals(player))) {
@@ -42,7 +43,7 @@ public final class CheckCache {
         playerCheckList.add(new Check(player.getLocation(), admin.getUniqueId(), player, taskId));
         Bukkit.getPluginManager().callEvent(new CheckStartEvent(player, admin));
         if (config.isBroadcastMessage()) {
-            MessageAPI.broadcast("broadcast.checking", ImmutableMap.of("{PLAYER_NAME}", player.getName(), "{ADMIN_NAME}", admin.getName()));
+            messageAPI.broadcast("broadcast.checking", ImmutableMap.of("{PLAYER_NAME}", player.getName(), "{ADMIN_NAME}", admin.getName()));
         }
         return true;
     }
@@ -59,7 +60,7 @@ public final class CheckCache {
             Bukkit.getPluginManager().callEvent(new CheckEndEvent(player, checkResult));
 
             if (config.isBroadcastMessage()) {
-                MessageAPI.broadcast("broadcast." + checkResult.name().toLowerCase(), ImmutableMap.of("{PLAYER_NAME}", player.getName()));
+                messageAPI.broadcast("broadcast." + checkResult.name().toLowerCase(), ImmutableMap.of("{PLAYER_NAME}", player.getName()));
             }
 
             iterator.remove();

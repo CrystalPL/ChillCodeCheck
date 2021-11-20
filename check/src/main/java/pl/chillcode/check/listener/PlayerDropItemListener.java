@@ -15,6 +15,7 @@ import pl.crystalek.crcapi.message.MessageAPI;
 @RequiredArgsConstructor
 public final class PlayerDropItemListener implements Listener {
     CheckCache checkCache;
+    MessageAPI messageAPI;
 
     @EventHandler
     public void onDrop(final PlayerDropItemEvent event) {
@@ -25,7 +26,7 @@ public final class PlayerDropItemListener implements Listener {
             return;
         }
 
-        MessageAPI.sendMessage("dropItemWhileChecking", player);
+        messageAPI.sendMessage("dropItemWhileChecking", player);
         event.setCancelled(true);
     }
 }

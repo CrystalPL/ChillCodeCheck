@@ -21,27 +21,28 @@ import java.util.stream.Collectors;
 public final class ClearSubCommand implements SubCommand {
     CheckCache checkCache;
     Config config;
+    MessageAPI messageAPI;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (!(sender instanceof Player)) {
-            MessageAPI.sendMessage("noConsole", sender);
+            messageAPI.sendMessage("noConsole", sender);
             return;
         }
 
         final Player player = Bukkit.getPlayer(args[1]);
         if (player == null) {
-            MessageAPI.sendMessage("clear.playerNotFound", sender);
+            messageAPI.sendMessage("clear.playerNotFound", sender);
             return;
         }
 
         final Check check = checkCache.clear(player, CheckResult.CLEAR);
         if (check == null) {
-            MessageAPI.sendMessage("clear.playerNotChecked", sender);
+            messageAPI.sendMessage("clear.playerNotChecked", sender);
             return;
         }
 
-        MessageAPI.sendMessage("clear.clear", player);
+        messageAPI.sendMessage("clear.clear", player);
         player.teleport(config.isBackPlayerToPreviousLocation() ? check.getPreviousLocation() : config.getTeleportPlayerAfterCheck());
     }
 
@@ -62,7 +63,8 @@ public final class ClearSubCommand implements SubCommand {
 
     @Override
     public List<String> tabComplete(final CommandSender sender, final String[] args) {
-        return checkCache.getPlayerCheckList().stream().map(check -> check.getPlayer().getName()).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());    }
+        return checkCache.getPlayerCheckList().stream().map(check -> check.getPlayer().getName()).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+    }
 
     @Override
     public String usagePathMessage() {

@@ -17,17 +17,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class SpawnSubCommand implements SubCommand {
     Config config;
+    MessageAPI messageAPI;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (!(sender instanceof Player)) {
-            MessageAPI.sendMessage("noConsole", sender);
+            messageAPI.sendMessage("noConsole", sender);
             return;
         }
 
         final Location spawnLocation = config.getSpawnLocation();
         ((Player) sender).teleport(spawnLocation);
-        MessageAPI.sendMessage("spawn.spawn", sender);
+        messageAPI.sendMessage("spawn.spawn", sender);
     }
 
     @Override

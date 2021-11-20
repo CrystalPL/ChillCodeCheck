@@ -20,11 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class SetSpawnSubCommand implements SubCommand {
     Config config;
+    MessageAPI messageAPI;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (!(sender instanceof Player)) {
-            MessageAPI.sendMessage("noConsole", sender);
+            messageAPI.sendMessage("noConsole", sender);
             return;
         }
 
@@ -42,13 +43,13 @@ public final class SetSpawnSubCommand implements SubCommand {
         try {
             spawnLocationFileHelper.save();
         } catch (final IOException exception) {
-            MessageAPI.sendMessage("setspawn.saveError", player);
+            messageAPI.sendMessage("setspawn.saveError", player);
             exception.printStackTrace();
             return;
         }
 
         config.setSpawnLocation(location);
-        MessageAPI.sendMessage("setspawn.setspawn", player);
+        messageAPI.sendMessage("setspawn.setspawn", player);
     }
 
     @Override

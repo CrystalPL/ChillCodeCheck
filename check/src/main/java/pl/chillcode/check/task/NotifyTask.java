@@ -12,9 +12,10 @@ import pl.crystalek.crcapi.message.MessageAPI;
 public final class NotifyTask implements Runnable {
     Player player;
     String adminName;
+    MessageAPI messageAPI;
 
     @Override
     public void run() {
-        MessageAPI.sendMessage("check.checkingMessage", player, ImmutableMap.of("{ADMIN_NAME}", adminName));
+        messageAPI.sendMessage("check.checkingMessage", player, ImmutableMap.of("{ADMIN_NAME}", adminName));
     }
 }

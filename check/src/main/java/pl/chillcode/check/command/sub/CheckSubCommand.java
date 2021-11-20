@@ -20,36 +20,37 @@ import java.util.stream.Collectors;
 public final class CheckSubCommand implements SubCommand {
     CheckCache checkCache;
     Config config;
+    MessageAPI messageAPI;
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (!(sender instanceof Player)) {
-            MessageAPI.sendMessage("noConsole", sender);
+            messageAPI.sendMessage("noConsole", sender);
             return;
         }
 
         final Player player = Bukkit.getPlayer(args[1]);
         if (player == null) {
-            MessageAPI.sendMessage("check.playerNotFound", sender);
+            messageAPI.sendMessage("check.playerNotFound", sender);
             return;
         }
 
         if (player.getName().equalsIgnoreCase(sender.getName())) {
-            MessageAPI.sendMessage("check.selfCheck", sender);
+            messageAPI.sendMessage("check.selfCheck", sender);
             return;
         }
 
         if (player.hasPermission("chillcode.check.bypass")) {
-            MessageAPI.sendMessage("check.bypass", sender);
+            messageAPI.sendMessage("check.bypass", sender);
             return;
         }
 
         if (!checkCache.checkPlayer((Player) sender, player)) {
-            MessageAPI.sendMessage("check.playerIsAlreadyChecked", sender);
+            messageAPI.sendMessage("check.playerIsAlreadyChecked", sender);
             return;
         }
 
-        MessageAPI.sendMessage("check.checkstarting", sender, ImmutableMap.of("{PLAYER_NAME}", player.getName()));
+        messageAPI.sendMessage("check.checkstarting", sender, ImmutableMap.of("{PLAYER_NAME}", player.getName()));
         player.teleport(config.getSpawnLocation());
     }
 

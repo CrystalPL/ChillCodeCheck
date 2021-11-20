@@ -17,6 +17,7 @@ import pl.crystalek.crcapi.message.MessageAPI;
 public final class PlayerCommandListener implements Listener {
     CheckCache checkCache;
     Config config;
+    MessageAPI messageAPI;
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(final PlayerCommandPreprocessEvent event) {
@@ -31,7 +32,7 @@ public final class PlayerCommandListener implements Listener {
             return;
         }
 
-        MessageAPI.sendMessage("useCommandWhileChecking", player);
+        messageAPI.sendMessage("useCommandWhileChecking", player);
         event.setCancelled(true);
     }
 }

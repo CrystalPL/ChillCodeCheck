@@ -4,20 +4,22 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import pl.crystalek.crcapi.config.exception.ConfigLoadException;
 import pl.crystalek.crcapi.storage.config.DatabaseConfig;
 import pl.crystalek.crcapi.storage.config.DatabaseConfigLoader;
 import pl.crystalek.crcapi.util.ColorUtil;
-import pl.crystalek.crcapi.util.LogUtil;
 
 import java.time.format.DateTimeFormatter;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Config {
     final FileConfiguration config;
+    final JavaPlugin plugin;
     DatabaseConfig databaseConfig;
     DateTimeFormatter dateTimeFormatter;
     String playerChatFormat;
@@ -25,10 +27,10 @@ public final class Config {
 
     public boolean load() {
         try {
-            this.databaseConfig = DatabaseConfigLoader.getDatabaseConfig(config.getConfigurationSection("database"));
+            this.databaseConfig = DatabaseConfigLoader.getDatabaseConfig(config.getConfigurationSection("database"), plugin);
         } catch (final ConfigLoadException exception) {
-            LogUtil.error("Wystąpił błąd podczas próby załadowania bazy danych");
-            LogUtil.error(exception.getMessage());
+            Bukkit.getLogger().severe("Wystąpił błąd podczas próby załadowania bazy danych");
+            Bukkit.getLogger().severe(exception.getMessage());
             return false;
         }
 

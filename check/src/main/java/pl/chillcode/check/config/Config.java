@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.crystalek.crcapi.config.ConfigParserUtil;
 import pl.crystalek.crcapi.config.FileHelper;
 import pl.crystalek.crcapi.config.exception.ConfigLoadException;
 import pl.crystalek.crcapi.util.ColorUtil;
-import pl.crystalek.crcapi.util.LogUtil;
 import pl.crystalek.crcapi.util.NumberUtil;
 
 import java.util.Arrays;
@@ -55,8 +55,8 @@ public final class Config {
         try {
             this.teleportPlayerAfterCheck = ConfigParserUtil.getLocation(config.getConfigurationSection("teleportPlayerAfterCheck"));
         } catch (final ConfigLoadException exception) {
-            LogUtil.error("Wystąpił błąd podczas ładowania pola teleportPlayerAfterCheck");
-            LogUtil.error(exception.getMessage());
+            Bukkit.getLogger().severe("Wystąpił błąd podczas ładowania pola teleportPlayerAfterCheck");
+            Bukkit.getLogger().severe(exception.getMessage());
             return false;
         }
 
@@ -66,16 +66,16 @@ public final class Config {
 
         final Optional<Integer> notifyTimeOptional = NumberUtil.getInt(config.get("notifyTime"));
         if (!notifyTimeOptional.isPresent()) {
-            LogUtil.error("Wystąpił błąd podczas ładowania pola notifyTime!");
-            LogUtil.error("Czas powiadomień musi być liczbą z zakresu <1, 2_147_483_647>!");
+            Bukkit.getLogger().severe("Wystąpił błąd podczas ładowania pola notifyTime!");
+            Bukkit.getLogger().severe("Czas powiadomień musi być liczbą z zakresu <1, 2_147_483_647>!");
             return false;
         }
         this.notifyTime = notifyTimeOptional.get();
         try {
             this.spawnLocation = ConfigParserUtil.getLocation(spawnLocationFileHelper.getConfiguration().getConfigurationSection("checkSpawnLocation"));
         } catch (final ConfigLoadException exception) {
-            LogUtil.error("Wystąpił błąd podczas ładowania pola checkSpawnLocation ze spawnLocation.yml");
-            LogUtil.error(exception.getMessage());
+            Bukkit.getLogger().severe("Wystąpił błąd podczas ładowania pola checkSpawnLocation ze spawnLocation.yml");
+            Bukkit.getLogger().severe(exception.getMessage());
             return false;
         }
 
