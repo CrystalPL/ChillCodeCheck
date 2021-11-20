@@ -35,7 +35,7 @@ public final class CheckCache {
         final int notifyTime = config.getNotifyTime();
         final int taskId;
         if (notifyTime != 0) {
-            taskId = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new NotifyTask(player, admin.getName()), 0, notifyTime).getTaskId();
+            taskId = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new NotifyTask(player, admin.getName(), messageAPI), 0, notifyTime).getTaskId();
         } else {
             taskId = 0;
         }
