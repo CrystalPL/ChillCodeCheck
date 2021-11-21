@@ -8,7 +8,7 @@ import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ResultUtil {
+public final class ResultUtil {
     Component cheaterResultComponent;
     Component clearResultComponent;
     Component logoutResultComponent;
