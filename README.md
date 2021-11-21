@@ -1,6 +1,11 @@
 # Sprawdzanie
 
 Plugin dodający możliwość sprawdzenia gracza pod kątem niedozwolonego oprogramowania.
+
+Do działania pluginu ChillCodeCheck wymagane są następujące pluginy: **CrCAPICore, CrCAPIMessage.**
+
+Do działnia pluginu ChillCodeCheck-Logs wymagane są następujące pluginy: **CrCAPICore, CrCAPIDatabase, CrCAPIMessage,
+ChillCodeCheck.**
 ___
 
 ### Instalacja
