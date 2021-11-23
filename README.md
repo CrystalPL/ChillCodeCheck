@@ -26,8 +26,10 @@ ___
 
 ### Komendy
 
-W pluginie jest jedna komenda /check, z aliasem /sprawdz. Komenda, jak i alias jest możliwa do zmiany w pliku konfiguracyjnym.
-Przed użyciem komendy, gracz musi posiadać uprawnienie **chillcode.check.base**.
+W pluginie jest jedna komenda /check, z aliasem /sprawdz. Komenda, jak i alias jest możliwa do zmiany w pliku
+konfiguracyjnym. Przed użyciem komendy, gracz musi posiadać uprawnienie **chillcode.check.base**.
+
+Jeżeli gracz ma uprawnienie **chillcode.check.bypass** to nie może być sprawdzany.
 
 |           Komenda         |         Uprawnienie       |                       Opis komendy                    |
 |---------------------------|---------------------------|-------------------------------------------------------|
