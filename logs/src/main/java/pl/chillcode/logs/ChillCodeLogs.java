@@ -22,6 +22,7 @@ import pl.crystalek.crcapi.config.ConfigHelper;
 import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
 import pl.crystalek.crcapi.message.MessageAPI;
 import pl.crystalek.crcapi.message.impl.ChatMessage;
+import pl.crystalek.crcapi.singlemessage.SingleMessageAPI;
 import pl.crystalek.crcapi.storage.BaseStorage;
 
 import java.io.IOException;
@@ -58,7 +59,7 @@ public final class ChillCodeLogs extends JavaPlugin {
             return;
         }
 
-        final MessageAPI messageAPI = new MessageAPI(this);
+        final MessageAPI messageAPI = new SingleMessageAPI(this);
         if (!messageAPI.init()) {
             return;
         }
@@ -83,10 +84,10 @@ public final class ChillCodeLogs extends JavaPlugin {
         final PlayerNicknameCache playerNicknameCache = new PlayerNicknameCache(provider);
         final LogCache logCache = new LogCache(provider, playerNicknameCache, this);
 
-        final Optional<Component> cheaterOptional = messageAPI.getComponent("checkResult.cheater", ChatMessage.class);
-        final Optional<Component> clearOptional = messageAPI.getComponent("checkResult.clear", ChatMessage.class);
-        final Optional<Component> logoutOptional = messageAPI.getComponent("checkResult.logout", ChatMessage.class);
-        final Optional<Component> admittingOptional = messageAPI.getComponent("checkResult.admitting", ChatMessage.class);
+        final Optional<Component> cheaterOptional = messageAPI.getComponent("checkResult.cheater", null, ChatMessage.class);
+        final Optional<Component> clearOptional = messageAPI.getComponent("checkResult.clear", null, ChatMessage.class);
+        final Optional<Component> logoutOptional = messageAPI.getComponent("checkResult.logout", null, ChatMessage.class);
+        final Optional<Component> admittingOptional = messageAPI.getComponent("checkResult.admitting", null, ChatMessage.class);
 
         if (!cheaterOptional.isPresent()) {
             getLogger().severe("Nie odnaleziono pola checkResult.cheater w pliku messages.yml");
@@ -118,9 +119,9 @@ public final class ChillCodeLogs extends JavaPlugin {
 
         final ResultUtil resultUtil = new ResultUtil(cheaterOptional.get(), clearOptional.get(), logoutOptional.get(), admittingOptional.get());
 
-        final Optional<Component> logOptional = messageAPI.getComponent("showLogs.log", ChatMessage.class);
-        final Optional<Component> detailsComponent = messageAPI.getComponent("showLogs.details", ChatMessage.class);
-        final Optional<Component> messageOptional = messageAPI.getComponent("showLogs.message", ChatMessage.class);
+        final Optional<Component> logOptional = messageAPI.getComponent("showLogs.log", null, ChatMessage.class);
+        final Optional<Component> detailsComponent = messageAPI.getComponent("showLogs.details", null, ChatMessage.class);
+        final Optional<Component> messageOptional = messageAPI.getComponent("showLogs.message", null, ChatMessage.class);
 
         if (!logOptional.isPresent()) {
             getLogger().severe("Nie odnaleziono pola showLogs.log w pliku messages.yml");

@@ -17,7 +17,7 @@ import pl.chillcode.logs.user.PlayerNicknameCache;
 import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
 import pl.crystalek.crcapi.lib.adventure.adventure.text.event.ClickEvent;
 import pl.crystalek.crcapi.message.MessageAPI;
-import pl.crystalek.crcapi.message.loader.MessageUtil;
+import pl.crystalek.crcapi.message.util.MessageUtil;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

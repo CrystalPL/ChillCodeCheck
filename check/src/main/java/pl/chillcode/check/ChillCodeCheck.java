@@ -19,6 +19,7 @@ import pl.crystalek.crcapi.command.CommandRegistry;
 import pl.crystalek.crcapi.config.ConfigHelper;
 import pl.crystalek.crcapi.config.FileHelper;
 import pl.crystalek.crcapi.message.MessageAPI;
+import pl.crystalek.crcapi.singlemessage.SingleMessageAPI;
 
 import java.io.IOException;
 import java.util.List;
@@ -63,7 +64,7 @@ public final class ChillCodeCheck extends JavaPlugin {
     }
 
     public boolean loadMessage() {
-        this.messageAPI = new MessageAPI(this);
+        this.messageAPI = new SingleMessageAPI(this);
         return messageAPI.init();
     }
 
