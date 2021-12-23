@@ -1,4 +1,5 @@
 # wiadomość wyświetlana, gdy gracz nie ma uprawnień do użycia komendy
+# {PERMISSION} - nazwa wymaganej permisji
 noPermission:
   chat: "&a&lChillCodeCheck &8» &cBrak uprawnień &7(&6{PERMISSION}&7)."
 
