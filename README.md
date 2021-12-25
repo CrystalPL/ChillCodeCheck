@@ -31,14 +31,14 @@ konfiguracyjnym. Przed użyciem komendy, gracz musi posiadać uprawnienie **chil
 
 Jeżeli gracz ma uprawnienie **chillcode.check.bypass** to nie może być sprawdzany.
 
-|           Komenda         |         Uprawnienie       |                       Opis komendy                    |
-|---------------------------|---------------------------|-------------------------------------------------------|
-|/check help                | chillcode.check.help      | Wyświetla wszystkie dostępne komendy                  |
-|/check setspawn            | chillcode.check.setspawn  | Ustawia miejsce teleportu graczy podczas sprawdzania  |
-|/check spawn               | chillcode.check.spawn     | Teleportuje na wyznaczone miejsce sprawdzania         |
-|/check sprawdz \<gracz>    | chillcode.check.sprawdz   | Rozpoczyna sprawdzanie danego gracza                  |
-|/check przyznanie \<gracz> | chillcode.check.admitting | Przyznanie się do cheatów, wykonuje komendy z configu |
-|/check czysty \<gracz>     | chillcode.check.clear     | Nie wykryto cheatów                                   |
-|/check cheater \<gracz>    | chillcode.check.cheater   | Wykrycie cheatów, wykonuje komendy z configu          |
-|/check logs \<gracz>       | chillcode.check.logs      | Ponowne załadowanie ustawień pluginu                  |
-|/check reload              | chillcode.check.reload    | Daty i przebieg sprawdzania gracza                    |
+| Komenda                    | Uprawnienie               | Opis komendy                                          |
+|----------------------------|---------------------------|-------------------------------------------------------|
+| /check help                | chillcode.check.help      | Wyświetla wszystkie dostępne komendy                  |
+| /check setspawn            | chillcode.check.setspawn  | Ustawia miejsce teleportu graczy podczas sprawdzania  |
+| /check spawn               | chillcode.check.spawn     | Teleportuje na wyznaczone miejsce sprawdzania         |
+| /check sprawdz \<gracz>    | chillcode.check.sprawdz   | Rozpoczyna sprawdzanie danego gracza                  |
+| /check przyznanie \<gracz> | chillcode.check.admitting | Przyznanie się do cheatów, wykonuje komendy z configu |
+| /check czysty \<gracz>     | chillcode.check.clear     | Nie wykryto cheatów                                   |
+| /check cheater \<gracz>    | chillcode.check.cheater   | Wykrycie cheatów, wykonuje komendy z configu          |
+| /check logs \<gracz>       | chillcode.check.logs      | Ponowne załadowanie ustawień pluginu                  |
+| /check reload              | chillcode.check.reload    | Daty i przebieg sprawdzania gracza                    |
