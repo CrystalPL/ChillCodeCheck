@@ -2,10 +2,7 @@
 
 Plugin dodający możliwość sprawdzenia gracza pod kątem niedozwolonego oprogramowania.
 
-Do działania pluginu ChillCodeCheck wymagane są następujące pluginy: **CrCAPICore, CrCAPIMessage.**
-
-Do działania pluginu ChillCodeCheck-Logs wymagane są następujące pluginy: **CrCAPICore, CrCAPIDatabase, CrCAPIMessage,
-ChillCodeCheck.**
+Do działania wtyczki wymagany jest plugin: **[CrCAPI](https://github.com/CrystalPL/CrCAPI/releases/)**.
 ___
 
 ### Instalacja
@@ -27,9 +24,9 @@ ___
 ### Komendy
 
 W pluginie jest jedna komenda /check, z aliasem /sprawdz. Komenda, jak i alias jest możliwa do zmiany w pliku
-konfiguracyjnym. Przed użyciem komendy, gracz musi posiadać uprawnienie **chillcode.check.base**.
+konfiguracyjnym. Przed użyciem komendy, gracz musi mieć uprawnienie **chillcode.check.base**.
 
-Jeżeli gracz ma uprawnienie **chillcode.check.bypass** to nie może być sprawdzany.
+Jeżeli gracz ma uprawnienie **chillcode.check.bypass**, to nie może być sprawdzany.
 
 | Komenda                    | Uprawnienie               | Opis komendy                                          |
 |----------------------------|---------------------------|-------------------------------------------------------|
@@ -42,3 +39,5 @@ Jeżeli gracz ma uprawnienie **chillcode.check.bypass** to nie może być sprawd
 | /check cheater \<gracz>    | chillcode.check.cheater   | Wykrycie cheatów, wykonuje komendy z configu          |
 | /check logs \<gracz>       | chillcode.check.logs      | Ponowne załadowanie ustawień pluginu                  |
 | /check reload              | chillcode.check.reload    | Daty i przebieg sprawdzania gracza                    |
+
+Plugin początkowo stworzony pod projekt: **chillcode**.

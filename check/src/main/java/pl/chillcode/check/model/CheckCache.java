@@ -12,15 +12,15 @@ import pl.chillcode.check.config.Config;
 import pl.chillcode.check.event.CheckEndEvent;
 import pl.chillcode.check.event.CheckStartEvent;
 import pl.chillcode.check.task.NotifyTask;
-import pl.crystalek.crcapi.message.MessageAPI;
+import pl.crystalek.crcapi.message.api.MessageAPI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Getter
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class CheckCache {
     List<Check> playerCheckList = new ArrayList<>();
     Config config;

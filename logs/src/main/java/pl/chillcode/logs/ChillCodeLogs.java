@@ -1,7 +1,7 @@
 package pl.chillcode.logs;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.chillcode.check.ChillCodeCheck;
@@ -16,55 +16,66 @@ import pl.chillcode.logs.listener.CheckStartListener;
 import pl.chillcode.logs.listener.PlayerJoinListener;
 import pl.chillcode.logs.log.LogCache;
 import pl.chillcode.logs.storage.Provider;
-import pl.chillcode.logs.storage.Storage;
+import pl.chillcode.logs.storage.mongo.MongoProvider;
+import pl.chillcode.logs.storage.mysql.MySQLProvider;
+import pl.chillcode.logs.storage.sqlite.SQLiteProvider;
 import pl.chillcode.logs.user.PlayerNicknameCache;
-import pl.crystalek.crcapi.config.ConfigHelper;
-import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
-import pl.crystalek.crcapi.message.MessageAPI;
-import pl.crystalek.crcapi.message.impl.ChatMessage;
-import pl.crystalek.crcapi.singlemessage.SingleMessageAPI;
-import pl.crystalek.crcapi.storage.BaseStorage;
+import pl.crystalek.crcapi.command.impl.Command;
+import pl.crystalek.crcapi.command.impl.MultiCommand;
+import pl.crystalek.crcapi.command.model.CommandData;
+import pl.crystalek.crcapi.core.config.exception.ConfigLoadException;
+import pl.crystalek.crcapi.database.storage.Storage;
+import pl.crystalek.crcapi.message.api.MessageAPI;
+import pl.crystalek.crcapi.message.api.MessageAPIProvider;
+import pl.crystalek.crcapi.message.api.message.IChatMessage;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public final class ChillCodeLogs extends JavaPlugin {
-    private Storage storage;
+    private Storage<Provider> storage;
 
     @Override
     public void onEnable() {
-        final ConfigHelper configHelper = new ConfigHelper("config.yml", this);
+        final MessageAPI messageAPI = Bukkit.getServicesManager().getRegistration(MessageAPIProvider.class).getProvider().getSingleMessage(this);
+        if (!messageAPI.init()) {
+            return;
+        }
+
+        final Config config = new Config(this, "config.yml");
         try {
-            configHelper.checkExist();
-            configHelper.load();
+            config.checkExist();
+            config.load();
         } catch (final IOException exception) {
             getLogger().severe("Nie udało się utworzyć pliku konfiguracyjnego..");
-            getLogger().severe("Wyłączanie pluginu");
+            getLogger().severe("Wyłączanie pluginu..");
             Bukkit.getPluginManager().disablePlugin(this);
             exception.printStackTrace();
             return;
         }
 
-        final Config config = new Config(configHelper.getConfiguration(), this);
-        if (!config.load()) {
-            getLogger().severe("Wyłączanie pluginu");
+        try {
+            config.loadConfig();
+        } catch (final ConfigLoadException exception) {
+            getLogger().severe(exception.getMessage());
+            getLogger().severe("Wyłączanie pluginu..");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
-        storage = new Storage(new BaseStorage<>(config.getDatabaseConfig(), this));
-        if (!storage.init()) {
-            getLogger().severe("Wyłączanie pluginu");
+        storage = new Storage<>(config.getDatabaseConfig(), this);
+        if (!storage.initDatabase()) {
+            getLogger().severe("Wyłączanie pluginu..");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
-        final MessageAPI messageAPI = new SingleMessageAPI(this);
-        if (!messageAPI.init()) {
-            return;
-        }
+        storage.initProvider(MySQLProvider.class, SQLiteProvider.class, MongoProvider.class);
+        final Provider provider = storage.getProvider();
 
-        final Plugin chillCodeCheck = Bukkit.getPluginManager().getPlugin("ChillCodeCheck");
+        final ChillCodeCheck chillCodeCheck = (ChillCodeCheck) Bukkit.getPluginManager().getPlugin("ChillCodeCheck");
         if (chillCodeCheck == null) {
             getLogger().severe("Nie odnaleziono pluginu ChillCodeCheck!");
             getLogger().severe("Wyłączanie pluginu");
@@ -80,14 +91,13 @@ public final class ChillCodeLogs extends JavaPlugin {
             return;
         }
 
-        final Provider provider = storage.getStorage().getProvider();
         final PlayerNicknameCache playerNicknameCache = new PlayerNicknameCache(provider);
         final LogCache logCache = new LogCache(provider, playerNicknameCache, this);
 
-        final Optional<Component> cheaterOptional = messageAPI.getComponent("checkResult.cheater", null, ChatMessage.class);
-        final Optional<Component> clearOptional = messageAPI.getComponent("checkResult.clear", null, ChatMessage.class);
-        final Optional<Component> logoutOptional = messageAPI.getComponent("checkResult.logout", null, ChatMessage.class);
-        final Optional<Component> admittingOptional = messageAPI.getComponent("checkResult.admitting", null, ChatMessage.class);
+        final Optional<IChatMessage> cheaterOptional = messageAPI.getMessage("checkResult.cheater", null, IChatMessage.class);
+        final Optional<IChatMessage> clearOptional = messageAPI.getMessage("checkResult.clear", null, IChatMessage.class);
+        final Optional<IChatMessage> logoutOptional = messageAPI.getMessage("checkResult.logout", null, IChatMessage.class);
+        final Optional<IChatMessage> admittingOptional = messageAPI.getMessage("checkResult.admitting", null, IChatMessage.class);
 
         if (!cheaterOptional.isPresent()) {
             getLogger().severe("Nie odnaleziono pola checkResult.cheater w pliku messages.yml");
@@ -117,11 +127,16 @@ public final class ChillCodeLogs extends JavaPlugin {
             return;
         }
 
-        final ResultUtil resultUtil = new ResultUtil(cheaterOptional.get(), clearOptional.get(), logoutOptional.get(), admittingOptional.get());
+        final ResultUtil resultUtil = new ResultUtil(
+                cheaterOptional.get().getChatComponent(),
+                clearOptional.get().getChatComponent(),
+                logoutOptional.get().getChatComponent(),
+                admittingOptional.get().getChatComponent()
+        );
 
-        final Optional<Component> logOptional = messageAPI.getComponent("showLogs.log", null, ChatMessage.class);
-        final Optional<Component> detailsComponent = messageAPI.getComponent("showLogs.details", null, ChatMessage.class);
-        final Optional<Component> messageOptional = messageAPI.getComponent("showLogs.message", null, ChatMessage.class);
+        final Optional<IChatMessage> logOptional = messageAPI.getMessage("showLogs.log", null, IChatMessage.class);
+        final Optional<IChatMessage> detailsComponent = messageAPI.getMessage("showLogs.details", null, IChatMessage.class);
+        final Optional<IChatMessage> messageOptional = messageAPI.getMessage("showLogs.message", null, IChatMessage.class);
 
         if (!logOptional.isPresent()) {
             getLogger().severe("Nie odnaleziono pola showLogs.log w pliku messages.yml");
@@ -144,23 +159,32 @@ public final class ChillCodeLogs extends JavaPlugin {
             return;
         }
 
-        final CheckCommand checkCommand = ((ChillCodeCheck) chillCodeCheck).getCheckCommand();
-        final LogSubCommand logSubCommand = new LogSubCommand(config, this, logCache, logOptional.get(), String.format("/%s details ", checkCommand.getName()), messageAPI, resultUtil);
-        final DetailsSubCommand detailsSubCommand = new DetailsSubCommand(config, logCache, detailsComponent.get(), messageOptional.get(), messageAPI, resultUtil);
-        checkCommand.registerSubCommand("logs", logSubCommand, true);
-        checkCommand.registerSubCommand("details", detailsSubCommand, false);
-
         final PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new CheckStartListener(logCache), this);
         pluginManager.registerEvents(new CheckEndListener(logCache), this);
         pluginManager.registerEvents(new AsyncCheckMessageListener(logCache), this);
         pluginManager.registerEvents(new PlayerJoinListener(provider, this), this);
+
+        //inject sub commands
+        final Map<Class<? extends Command>, CommandData> commandDataMap = chillCodeCheck.getCheckConfig().getCommandDataMap();
+        final CommandData commandData = commandDataMap.get(CheckCommand.class);
+        final Map<Class<? extends Command>, List<String>> subCommandMap = commandData.getSubCommandMap();
+
+        subCommandMap.put(DetailsSubCommand.class, ImmutableList.of("details"));
+        subCommandMap.put(LogSubCommand.class, ImmutableList.of("logs"));
+
+        final DetailsSubCommand detailsSubCommand = new DetailsSubCommand(messageAPI, commandDataMap, config, logCache, detailsComponent.get().getChatComponent(), messageOptional.get().getChatComponent(), resultUtil);
+        final LogSubCommand logSubCommand = new LogSubCommand(messageAPI, commandDataMap, config, this, logCache, logOptional.get().getChatComponent(), String.format("/%s details ", commandData.getCommandName()), resultUtil);
+
+        final MultiCommand checkCommand = chillCodeCheck.getCheckCommand();
+        checkCommand.registerSubCommand(detailsSubCommand, false);
+        checkCommand.registerSubCommand(logSubCommand, true);
     }
 
     @Override
     public void onDisable() {
         if (storage != null) {
-            storage.getStorage().getDatabase().close();
+            storage.close();
         }
     }
 }

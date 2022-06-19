@@ -1,48 +1,46 @@
 plugins {
     id 'java-library'
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 compileJava.options.encoding = 'UTF-8'
 
 allprojects {
     group = 'pl.chillcode'
-    version = '1.0-SNAPSHOT'
+    version = '1.0'
 }
 
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'com.github.johnrengelman.shadow'
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         mavenCentral()
-        maven {
-            name = 'spigotmc-repo'
-            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-        }
-        maven {
-            name = 'sonatype'
-            url = 'https://oss.sonatype.org/content/groups/public/'
-        }
-        flatDir {
-            dirs new File(rootDir, 'libs')
-        }
+        maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://repo.crystalek.pl/crc" }
     }
 
     dependencies {
         compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+
         compileOnly 'org.projectlombok:lombok:1.18.22'
         annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+        compileOnly 'pl.crystalek:message-api:1.4.7'
+        compileOnly 'pl.crystalek:core:1.5.7'
+        compileOnly 'pl.crystalek:command:1.6.1'
     }
 
 
     shadowJar {
-        minimize()
-        archiveFileName = "$baseName.$extension"
+        archiveFileName = "${archiveBaseName.get()} v${archiveVersion.get()}.${archiveExtension.get()}"
+
         classifier(null)
-        destinationDirectory.set(new File("F:\\Minecraft\\minecraft1.8.8\\plugins"))
+        minimize()
+        destinationDirectory.set(new File(String.valueOf(System.getenv("MC_PATH188"))))
     }
 }

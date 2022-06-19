@@ -10,10 +10,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import pl.chillcode.check.config.Config;
 import pl.chillcode.check.model.CheckCache;
-import pl.crystalek.crcapi.message.MessageAPI;
+import pl.crystalek.crcapi.message.api.MessageAPI;
 
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class PlayerCommandListener implements Listener {
     CheckCache checkCache;
     Config config;

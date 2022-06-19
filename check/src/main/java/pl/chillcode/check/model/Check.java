@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class Check {
     Location previousLocation;
     UUID adminUUID;

@@ -9,8 +9,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @Getter
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class CheckStartEvent extends Event {
     static HandlerList HANDLERS = new HandlerList();
     Player player;

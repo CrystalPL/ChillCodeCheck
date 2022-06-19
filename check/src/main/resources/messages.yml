@@ -39,7 +39,7 @@ check:
       - "- - - - - - - - - - - - - -"
       - "&4&lSPRAWDZANIE"
       - "&fMasz 3 minuty na wejscie, na ts3 &6teamspeak.pl!"
-      - "- - - - - - - - - - - - - -"
+      - "&r- - - - - - - - - - - - - -"
     title:
       title: "&4&lSPRAWDZANIE"
       subtitle: "&c&lWspółpracuj z adminem"
@@ -125,11 +125,6 @@ reload:
   error:
     chat: "&a&lChillCodeCheck &8» &cWystąpił błąd podczas próby załadowania plików konfiguracyjnych."
 
-log:
-  # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
-  usage:
-    chat: "&a&lChillCodeCheck &8» &6/check logs <gracz> &7- daty i przebieg sprawdzania gracza"
-
 # wiadomość wyświetlana, gdy gracz próbuje użyć komend będąc sprawdzanym
 useCommandWhileChecking:
   chat: "&a&lChillCodeCheck &8» &cNie możesz używać komend podczas sprawdzania!"
@@ -162,7 +157,6 @@ broadcast:
 # wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
 usage:
   chat:
-    - "&a&lChillCodeCheck &8» &6/check help &7- wyświetla wszystkie dostępne komendy"
     - "&a&lChillCodeCheck &8» &6/check setspawn &7- ustawia miejsce teleportu graczy podczas sprawdzania "
     - "&a&lChillCodeCheck &8» &6/check spawn &7- teleportuje na wyznaczone miejsce sprawdzania"
     - "&a&lChillCodeCheck &8» &6/check sprawdz <gracz> &7- rozpoczyna sprawdzanie danego gracza"

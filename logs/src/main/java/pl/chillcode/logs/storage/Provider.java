@@ -2,21 +2,21 @@ package pl.chillcode.logs.storage;
 
 import org.bukkit.entity.Player;
 import pl.chillcode.logs.log.Log;
-import pl.crystalek.crcapi.storage.BaseProvider;
+import pl.crystalek.crcapi.database.provider.BaseProvider;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class Provider extends BaseProvider {
+public interface Provider extends BaseProvider {
 
-    public abstract void createUser(final Player player);
+    void createUser(final Player player);
 
-    public abstract Optional<UUID> getPlayerUUID(final String nick);
+    Optional<UUID> getPlayerUUID(final String nick);
 
-    public abstract Optional<String> getPlayerNickname(final UUID uuid);
+    Optional<String> getPlayerNickname(final UUID uuid);
 
-    public abstract Optional<List<Log>> getPlayerLogs(final UUID uuid);
+    Optional<List<Log>> getPlayerLogs(final UUID uuid);
 
-    public abstract void saveLog(final Log log);
+    void saveLog(final Log log);
 }

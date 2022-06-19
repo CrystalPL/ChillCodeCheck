@@ -4,7 +4,7 @@ import pl.crystalek.crcapi.lib.bson.Document;
 
 import java.util.Comparator;
 
-public final class MessageLogDocumentComparator implements Comparator<Document> {
+final class MessageLogDocumentComparator implements Comparator<Document> {
 
     @Override
     public int compare(final Document messageLogDocument1, final Document messageLogDocument2) {

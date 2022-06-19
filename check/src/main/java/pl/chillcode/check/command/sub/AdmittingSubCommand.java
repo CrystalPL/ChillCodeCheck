@@ -1,34 +1,35 @@
 package pl.chillcode.check.command.sub;
 
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import pl.chillcode.check.command.SubCommand;
 import pl.chillcode.check.config.Config;
 import pl.chillcode.check.model.CheckCache;
 import pl.chillcode.check.model.CheckResult;
-import pl.crystalek.crcapi.message.MessageAPI;
+import pl.crystalek.crcapi.command.impl.Command;
+import pl.crystalek.crcapi.command.model.CommandData;
+import pl.crystalek.crcapi.message.api.MessageAPI;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
-public final class AdmittingSubCommand implements SubCommand {
+public final class AdmittingSubCommand extends Command {
     CheckCache checkCache;
     Config config;
-    MessageAPI messageAPI;
+
+    public AdmittingSubCommand(final MessageAPI messageAPI, final Map<Class<? extends Command>, CommandData> commandDataMap, final CheckCache checkCache, final Config config) {
+        super(messageAPI, commandDataMap);
+
+        this.checkCache = checkCache;
+        this.config = config;
+    }
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
-        if (!(sender instanceof Player)) {
-            messageAPI.sendMessage("noConsole", sender);
-            return;
-        }
-
         final Player player = Bukkit.getPlayer(args[1]);
         if (player == null) {
             messageAPI.sendMessage("admitting.playerNotFound", sender);
@@ -44,13 +45,8 @@ public final class AdmittingSubCommand implements SubCommand {
     }
 
     @Override
-    public int maxArgumentLength() {
-        return 2;
-    }
-
-    @Override
-    public int minArgumentLength() {
-        return 2;
+    public List<String> tabComplete(final CommandSender sender, final String[] args) {
+        return checkCache.getPlayerCheckList().stream().map(check -> check.getPlayer().getName()).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
     }
 
     @Override
@@ -59,12 +55,22 @@ public final class AdmittingSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> tabComplete(final CommandSender sender, final String[] args) {
-        return checkCache.getPlayerCheckList().stream().map(check -> check.getPlayer().getName()).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+    public boolean isUseConsole() {
+        return false;
     }
 
     @Override
-    public String usagePathMessage() {
+    public String getCommandUsagePath() {
         return "admitting.usage";
+    }
+
+    @Override
+    public int maxArgumentLength() {
+        return 2;
+    }
+
+    @Override
+    public int minArgumentLength() {
+        return 2;
     }
 }

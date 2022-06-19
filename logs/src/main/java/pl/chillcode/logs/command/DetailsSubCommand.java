@@ -2,10 +2,8 @@ package pl.chillcode.logs.command;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.command.CommandSender;
-import pl.chillcode.check.command.SubCommand;
 import pl.chillcode.logs.config.Config;
 import pl.chillcode.logs.exception.LogNotExistException;
 import pl.chillcode.logs.exception.PlayerNotFoundException;
@@ -13,9 +11,11 @@ import pl.chillcode.logs.log.Log;
 import pl.chillcode.logs.log.LogCache;
 import pl.chillcode.logs.log.MessageLog;
 import pl.chillcode.logs.user.PlayerNicknameCache;
+import pl.crystalek.crcapi.command.impl.Command;
+import pl.crystalek.crcapi.command.model.CommandData;
 import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
-import pl.crystalek.crcapi.message.MessageAPI;
-import pl.crystalek.crcapi.message.util.MessageUtil;
+import pl.crystalek.crcapi.message.api.MessageAPI;
+import pl.crystalek.crcapi.message.api.util.MessageUtil;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,16 +26,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public final class DetailsSubCommand implements SubCommand {
+public final class DetailsSubCommand extends Command {
     ZoneId zoneId = ZoneId.of("Poland");
     Config config;
     LogCache logCache;
     Component detailsComponent;
     Component messageLogComponent;
-    MessageAPI messageAPI;
     ResultUtil resultUtil;
+
+    public DetailsSubCommand(final MessageAPI messageAPI, final Map<Class<? extends Command>, CommandData> commandDataMap, final Config config, final LogCache logCache, final Component detailsComponent, final Component messageLogComponent, final ResultUtil resultUtil) {
+        super(messageAPI, commandDataMap);
+
+        this.config = config;
+        this.logCache = logCache;
+        this.detailsComponent = detailsComponent;
+        this.messageLogComponent = messageLogComponent;
+        this.resultUtil = resultUtil;
+    }
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
@@ -79,10 +87,12 @@ public final class DetailsSubCommand implements SubCommand {
             final MessageLog message = messageLogList.get(i);
 
             final String messageSentTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(message.getSentTime()), zoneId).format(dateTimeFormatter);
+            final String chatFormat = (message.isAdminMessage() ? config.getAdminChatFormat() : config.getPlayerChatFormat())
+                    .replace("{MESSAGE}", message.getMessage())
+                    .replace("{PLAYER_NAME}", playerNicknameCache.getPlayerNickname(message.getSenderUUID()));
+
             final Map<String, Object> messageLogReplacements = ImmutableMap.of(
-                    "{CHAT_FORMAT}", message.isAdminMessage() ? config.getAdminChatFormat() : config.getPlayerChatFormat(),
-                    "{MESSAGE}", message.getMessage(),
-                    "{PLAYER_NAME}", playerNicknameCache.getPlayerNickname(message.getSenderUUID()),
+                    "{CHAT_FORMAT}", chatFormat,
                     "{MESSAGE_SENT_TIME}", messageSentTime
             );
 
@@ -102,13 +112,8 @@ public final class DetailsSubCommand implements SubCommand {
     }
 
     @Override
-    public int maxArgumentLength() {
-        return 3;
-    }
-
-    @Override
-    public int minArgumentLength() {
-        return 3;
+    public List<String> tabComplete(final CommandSender sender, final String[] args) {
+        return new ArrayList<>();
     }
 
     @Override
@@ -117,12 +122,22 @@ public final class DetailsSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> tabComplete(final CommandSender sender, final String[] args) {
-        return new ArrayList<>();
+    public boolean isUseConsole() {
+        return true;
     }
 
     @Override
-    public String usagePathMessage() {
-        return "usage";
+    public String getCommandUsagePath() {
+        return "showDetailsError";
+    }
+
+    @Override
+    public int maxArgumentLength() {
+        return 3;
+    }
+
+    @Override
+    public int minArgumentLength() {
+        return 3;
     }
 }

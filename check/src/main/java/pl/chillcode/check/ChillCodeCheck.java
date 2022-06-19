@@ -16,39 +16,84 @@ import pl.chillcode.check.listener.PlayerQuitListener;
 import pl.chillcode.check.model.Check;
 import pl.chillcode.check.model.CheckCache;
 import pl.crystalek.crcapi.command.CommandRegistry;
-import pl.crystalek.crcapi.config.ConfigHelper;
-import pl.crystalek.crcapi.config.FileHelper;
-import pl.crystalek.crcapi.message.MessageAPI;
-import pl.crystalek.crcapi.singlemessage.SingleMessageAPI;
+import pl.crystalek.crcapi.command.impl.MultiCommand;
+import pl.crystalek.crcapi.core.config.FileHelper;
+import pl.crystalek.crcapi.core.config.exception.ConfigLoadException;
+import pl.crystalek.crcapi.message.api.MessageAPI;
+import pl.crystalek.crcapi.message.api.MessageAPIProvider;
 
 import java.io.IOException;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ChillCodeCheck extends JavaPlugin {
-    FileHelper spawnLocationFileHelper;
-    ConfigHelper configHelper;
+    MessageAPI messageAPI;
     Config config;
     CheckCache checkCache;
     @Getter
-    CheckCommand checkCommand;
-    MessageAPI messageAPI;
-
+    MultiCommand checkCommand;
 
     @Override
     public void onEnable() {
-        spawnLocationFileHelper = new FileHelper("spawnLocation.yml", this);
-        configHelper = new ConfigHelper("config.yml", this);
-        if (!loadFiles()) {
+        messageAPI = Bukkit.getServicesManager().getRegistration(MessageAPIProvider.class).getProvider().getSingleMessage(this);
+        if (!messageAPI.init()) {
             return;
         }
 
-        HandlerList.unregisterAll(this);
-        loadMessage();
+        final FileHelper spawnLocationFileHelper = new FileHelper(this, "spawnLocation.yml");
+        try {
+            spawnLocationFileHelper.checkExist();
+            spawnLocationFileHelper.load();
+        } catch (final IOException exception) {
+            getLogger().severe("Nie udało się utworzyć pliku z konfiguracją serwera..");
+            getLogger().severe("Wyłączanie pluginu");
+            exception.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
+
+        config = new Config(this, "config.yml", spawnLocationFileHelper);
+        try {
+            config.checkExist();
+            config.load();
+        } catch (final IOException exception) {
+            getLogger().severe("Nie udało się utworzyć pliku konfiguracyjnego..");
+            getLogger().severe("Wyłączanie pluginu..");
+            Bukkit.getPluginManager().disablePlugin(this);
+            exception.printStackTrace();
+            return;
+        }
+
+        try {
+            config.loadConfig();
+        } catch (final ConfigLoadException exception) {
+            getLogger().severe(exception.getMessage());
+            getLogger().severe("Wyłączanie pluginu..");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         checkCache = new CheckCache(config, this, messageAPI);
-        checkCommand = new CheckCommand(config, checkCache, this, messageAPI);
+        checkCommand = new CheckCommand(messageAPI, config.getCommandDataMap(), checkCache, config, this);
+
         CommandRegistry.register(checkCommand);
+
         registerListeners();
+    }
+
+    public void registerListeners() {
+        HandlerList.unregisterAll(this);
+
+        final PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.registerEvents(new AsyncPlayerChatListener(checkCache, config), this);
+        pluginManager.registerEvents(new PlayerQuitListener(checkCache, config), this);
+
+        if (!config.isAllowedUseCommands()) {
+            pluginManager.registerEvents(new PlayerCommandListener(checkCache, config, messageAPI), this);
+        }
+
+        if (!config.isDropItem()) {
+            pluginManager.registerEvents(new PlayerDropItemListener(checkCache, messageAPI), this);
+        }
     }
 
     @Override
@@ -63,56 +108,7 @@ public final class ChillCodeCheck extends JavaPlugin {
         }
     }
 
-    public boolean loadMessage() {
-        this.messageAPI = new SingleMessageAPI(this);
-        return messageAPI.init();
-    }
-
-    public boolean loadFiles() {
-        try {
-            spawnLocationFileHelper.checkExist();
-            spawnLocationFileHelper.load();
-        } catch (final IOException exception) {
-            getLogger().severe("Nie udało się utworzyć pliku z lokalizacją spawnu..");
-            getLogger().severe("Wyłączanie pluginu");
-            Bukkit.getPluginManager().disablePlugin(this);
-            exception.printStackTrace();
-            return false;
-        }
-
-        try {
-            configHelper.checkExist();
-            configHelper.load();
-        } catch (final IOException exception) {
-            getLogger().severe("Nie udało się utworzyć pliku konfiguracyjnego..");
-            getLogger().severe("Wyłączanie pluginu");
-            Bukkit.getPluginManager().disablePlugin(this);
-            exception.printStackTrace();
-            return false;
-        }
-
-        config = new Config(configHelper.getConfiguration(), spawnLocationFileHelper);
-        if (!config.load()) {
-            getLogger().severe("Wyłączanie pluginu");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return false;
-        }
-
-        return true;
-    }
-
-    public void registerListeners() {
-        final PluginManager pluginManager = Bukkit.getPluginManager();
-
-        pluginManager.registerEvents(new AsyncPlayerChatListener(checkCache, config), this);
-        pluginManager.registerEvents(new PlayerQuitListener(checkCache, config), this);
-
-        if (!config.isAllowedUseCommands()) {
-            pluginManager.registerEvents(new PlayerCommandListener(checkCache, config, messageAPI), this);
-        }
-
-        if (!config.isDropItem()) {
-            pluginManager.registerEvents(new PlayerDropItemListener(checkCache, messageAPI), this);
-        }
+    public Config getCheckConfig() {
+        return config;
     }
 }

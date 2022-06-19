@@ -18,8 +18,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class AsyncPlayerChatListener implements Listener {
     CheckCache checkCache;
     Config config;
@@ -54,12 +54,13 @@ public final class AsyncPlayerChatListener implements Listener {
         if (check != null) {
             removeRecipients(event.getRecipients(), check);
             setFormat(config.getPlayerChatFormat(), event);
+            event.setCancelled(false);
         } else {
             final UUID playerUUID = player.getUniqueId();
 
             for (final Check adminCheck : checkCache.getPlayerCheckList()) {
                 if (adminCheck.getAdminUUID().equals(playerUUID)) {
-                    if (message.charAt(0) == config.getAdminChatChar()) {
+                    if (message.charAt(0) == config.getAdminChatChar() && message.trim().length() > 1) {
                         check = adminCheck;
                         adminMessage = true;
 

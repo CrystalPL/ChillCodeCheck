@@ -14,8 +14,8 @@ import pl.chillcode.check.model.Check;
 import pl.chillcode.check.model.CheckCache;
 import pl.chillcode.check.model.CheckResult;
 
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class PlayerQuitListener implements Listener {
     ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
     CheckCache checkCache;

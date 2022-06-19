@@ -2,22 +2,22 @@ package pl.chillcode.logs.command;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.chillcode.check.command.SubCommand;
 import pl.chillcode.logs.config.Config;
 import pl.chillcode.logs.exception.LogNotExistException;
 import pl.chillcode.logs.exception.PlayerNotFoundException;
 import pl.chillcode.logs.log.Log;
 import pl.chillcode.logs.log.LogCache;
 import pl.chillcode.logs.user.PlayerNicknameCache;
+import pl.crystalek.crcapi.command.impl.Command;
+import pl.crystalek.crcapi.command.model.CommandData;
 import pl.crystalek.crcapi.lib.adventure.adventure.text.Component;
 import pl.crystalek.crcapi.lib.adventure.adventure.text.event.ClickEvent;
-import pl.crystalek.crcapi.message.MessageAPI;
-import pl.crystalek.crcapi.message.util.MessageUtil;
+import pl.crystalek.crcapi.message.api.MessageAPI;
+import pl.crystalek.crcapi.message.api.util.MessageUtil;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -27,17 +27,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public final class LogSubCommand implements SubCommand {
+public final class LogSubCommand extends Command {
     ZoneId zoneId = ZoneId.of("Poland");
     Config config;
     JavaPlugin plugin;
     LogCache logCache;
     Component showLogsComponent;
     String runningCommand;
-    MessageAPI messageAPI;
     ResultUtil resultUtil;
+
+    public LogSubCommand(final MessageAPI messageAPI, final Map<Class<? extends Command>, CommandData> commandDataMap, final Config config, final JavaPlugin plugin, final LogCache logCache, final Component showLogsComponent, final String runningCommand, final ResultUtil resultUtil) {
+        super(messageAPI, commandDataMap);
+
+        this.config = config;
+        this.plugin = plugin;
+        this.logCache = logCache;
+        this.showLogsComponent = showLogsComponent;
+        this.runningCommand = runningCommand;
+        this.resultUtil = resultUtil;
+    }
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
@@ -73,13 +82,8 @@ public final class LogSubCommand implements SubCommand {
     }
 
     @Override
-    public int maxArgumentLength() {
-        return 2;
-    }
-
-    @Override
-    public int minArgumentLength() {
-        return 2;
+    public List<String> tabComplete(final CommandSender sender, final String[] args) {
+        return new ArrayList<>();
     }
 
     @Override
@@ -88,12 +92,22 @@ public final class LogSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> tabComplete(final CommandSender sender, final String[] args) {
-        return new ArrayList<>();
+    public boolean isUseConsole() {
+        return true;
     }
 
     @Override
-    public String usagePathMessage() {
-        return "log.usage";
+    public String getCommandUsagePath() {
+        return "logUsage";
+    }
+
+    @Override
+    public int maxArgumentLength() {
+        return 2;
+    }
+
+    @Override
+    public int minArgumentLength() {
+        return 2;
     }
 }

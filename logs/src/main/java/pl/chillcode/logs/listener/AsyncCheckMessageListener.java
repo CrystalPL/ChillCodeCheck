@@ -9,8 +9,8 @@ import pl.chillcode.check.event.AsyncCheckMessageEvent;
 import pl.chillcode.logs.log.LogCache;
 import pl.chillcode.logs.log.MessageLog;
 
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class AsyncCheckMessageListener implements Listener {
     LogCache logCache;
 

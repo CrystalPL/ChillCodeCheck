@@ -7,11 +7,11 @@ import pl.chillcode.check.model.CheckResult;
 import java.util.LinkedList;
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Log {
     final long checkStartTime;
     final UUID playerUUID;

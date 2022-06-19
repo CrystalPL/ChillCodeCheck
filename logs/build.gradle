@@ -1,10 +1,9 @@
 dependencies {
-    shadow project (":check")
-    compileOnly name: "CrCAPICore"
-    compileOnly name: "CrCAPIMessage"
-    compileOnly name: "CrCAPIDatabase"
+    shadow project(":check")
+
+    compileOnly 'pl.crystalek:database:1.4.7'
 }
 
 shadowJar {
-    archiveFileName = "ChillCodeCheck-Logs.jar"
+    archiveFileName = "ChillCodeCheck-Logs v${archiveVersion.get()}.${archiveExtension.get()}"
 }

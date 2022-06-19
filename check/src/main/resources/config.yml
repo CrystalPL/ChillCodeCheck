@@ -1,8 +1,16 @@
 # Konfiguracja komendy /check
 command:
-  check:
+  CheckCommand:
     name: "check"
     aliases: "sprawdz"
+    subCommands:
+      AdmittingSubCommand: "przyznanie"
+      CheaterSubCommand: "cheater"
+      CheckSubCommand: "sprawdz"
+      ClearSubCommand: "czysty"
+      ReloadSubCommand: "reload"
+      SetSpawnSubCommand: "setspawn"
+      SpawnSubCommand: "spawn"
 
 # znak poprzedzający wiadomość, gdy ma zostać wysłana do sprawdzanego gracza
 adminChatChar: '#'
@@ -23,7 +31,7 @@ commandsWhenPlayerLogout:
 # tj. czy gracz został zbanowany/wylogował się/nie miał cheatów
 broadcastMessage: true
 
-# czy gracz ma być przeniesiony na swoja poprzednie lokalizację czy na dane koordynaty
+# czy gracz ma być przeniesiony na swoją poprzednią lokalizację, czy na dane koordynaty
 backPlayerToPreviousLocation: true
 teleportPlayerAfterCheck:
   world: world

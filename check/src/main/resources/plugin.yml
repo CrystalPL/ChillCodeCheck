@@ -2,5 +2,5 @@ name: ChillCodeCheck
 version: 1.0
 main: pl.chillcode.check.ChillCodeCheck
 authors: [ Crystal ]
-depend: [ CrCAPICore, CrCAPIMessage ]
+depend: [ CrCAPI ]
 softdepend: [ CrCCheck-Logs ]

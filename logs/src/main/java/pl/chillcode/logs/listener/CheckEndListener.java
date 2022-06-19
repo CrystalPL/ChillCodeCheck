@@ -8,8 +8,8 @@ import org.bukkit.event.Listener;
 import pl.chillcode.check.event.CheckEndEvent;
 import pl.chillcode.logs.log.LogCache;
 
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class CheckEndListener implements Listener {
     LogCache logCache;
 

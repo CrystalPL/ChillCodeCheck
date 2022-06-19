@@ -46,9 +46,13 @@ showLogs:
         message: "{CHAT_FORMAT}"
         hover: "&6Data wysłania wiadomości: &7{MESSAGE_SENT_TIME}"
 
-# zmienne wyświetląjace się podczas wyświetlenia szczegółów sprawdzania
+# wiadomość wyświetlana, gdy komenda zostanie wywołana niepoprawnie
+logUsage:
+  chat: "&a&lChillCodeCheck &8» &6/check logs <gracz> &7- daty i przebieg sprawdzania gracza"
+
+# zmienne wyświetlające się podczas wyświetlenia szczegółów sprawdzania
 checkResult:
-  # gdy u gracz wykryto cheaty
+  # gdy u gracza wykryto cheaty
   cheater:
     chat: "czitowanie"
 

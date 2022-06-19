@@ -1,29 +1,41 @@
 package pl.chillcode.logs.storage;
 
 
+import lombok.AccessLevel;
 import lombok.Cleanup;
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import pl.chillcode.check.model.CheckResult;
 import pl.chillcode.logs.log.Log;
 import pl.chillcode.logs.log.MessageLog;
-import pl.crystalek.crcapi.storage.config.DatabaseConfig;
-import pl.crystalek.crcapi.storage.util.SQLFunction;
-import pl.crystalek.crcapi.storage.util.SQLUtil;
+import pl.crystalek.crcapi.database.config.DatabaseConfig;
+import pl.crystalek.crcapi.database.provider.sql.BaseSQLProvider;
+import pl.crystalek.crcapi.database.provider.sql.model.SQLFunction;
+import pl.crystalek.crcapi.lib.hikari.HikariDataSource;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
-@RequiredArgsConstructor
-public abstract class SQLProvider extends Provider {
-    protected final SQLUtil sqlUtil;
-    private final DatabaseConfig databaseConfig;
-    private String selectPlayerUUID;
-    private String selectPlayerNickname;
-    private String selectMessages;
-    private String selectLogs;
-    private String insertLogs;
-    private String insertMessages;
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public abstract class SQLProvider extends BaseSQLProvider implements Provider {
+    String selectPlayerUUID;
+    String selectPlayerNickname;
+    String selectMessages;
+    String selectLogs;
+    String insertLogs;
+    String insertMessages;
+
+    public SQLProvider(final DatabaseConfig databaseConfig, final HikariDataSource database) {
+        super(databaseConfig, database);
+
+        final String prefix = databaseConfig.getPrefix();
+        this.selectPlayerUUID = String.format("SELECT uuid FROM %suser WHERE nickname = ? LIMIT 1;", prefix);
+        this.selectPlayerNickname = String.format("SELECT nickname FROM %suser WHERE uuid = ? LIMIT 1;", prefix);
+        this.selectMessages = String.format("SELECT * FROM %smessages_log WHERE log_id = ? ORDER BY sent_time ASC;", prefix);
+        this.selectLogs = String.format("SELECT * FROM %slogs WHERE player_uuid = ?;", prefix);
+        this.insertLogs = String.format("INSERT INTO %slogs (check_start_time, player_uuid, admin_uuid, check_result, check_end_time) VALUES (?, ?, ?, ?, ?);", prefix);
+        this.insertMessages = String.format("INSERT INTO %smessages_log (message, sender_uuid, sent_time, admin_message, log_id) VALUES (?, ?, ?, ?, ?);", prefix);
+    }
 
     @Override
     public Optional<UUID> getPlayerUUID(final String nick) {
@@ -35,7 +47,7 @@ public abstract class SQLProvider extends Provider {
             return Optional.of(UUID.fromString(resultSet.getString("uuid")));
         };
 
-        return sqlUtil.executeQueryAndOpenConnection(selectPlayerUUID, function, nick);
+        return executeQueryAndOpenConnection(selectPlayerUUID, function, nick);
     }
 
     @Override
@@ -48,12 +60,12 @@ public abstract class SQLProvider extends Provider {
             return Optional.of(resultSet.getString("nickname"));
         };
 
-        return sqlUtil.executeQueryAndOpenConnection(selectPlayerNickname, function, uuid.toString());
+        return executeQueryAndOpenConnection(selectPlayerNickname, function, uuid.toString());
     }
 
     @Override
     public Optional<List<Log>> getPlayerLogs(final UUID uuid) {
-        return sqlUtil.openConnection(connection -> {
+        return openConnection(connection -> {
             final SQLFunction<ResultSet, Optional<List<Log>>> logFunction = resultSet -> {
                 if (!resultSet.next()) {
                     return Optional.empty();
@@ -84,7 +96,7 @@ public abstract class SQLProvider extends Provider {
                         return messageLogList;
                     };
 
-                    final LinkedList<MessageLog> messageLogList = sqlUtil.executeQuery(connection, selectMessages, messagesFunction, logId);
+                    final LinkedList<MessageLog> messageLogList = executeQuery(connection, selectMessages, messagesFunction, logId);
                     logList.add(new Log(checkStartTime, playerUuid, adminUuid, checkResult, checkEndTime, messageLogList));
 
                 } while (resultSet.next());
@@ -92,29 +104,29 @@ public abstract class SQLProvider extends Provider {
                 return Optional.of(logList);
             };
 
-            return sqlUtil.executeQuery(connection, selectLogs, logFunction, uuid);
+            return executeQuery(connection, selectLogs, logFunction, uuid);
         });
     }
 
     public void saveLog(final String logIdSql, final String logIdColumn, final Log log, final Object... logIdParams) {
-        sqlUtil.openConnection(connection -> {
+        openConnection(connection -> {
             final String playerUUID = log.getPlayerUUID().toString();
             final String adminUUID = log.getAdminUUID().toString();
 
-            sqlUtil.executeUpdate(connection, insertLogs, log.getCheckStartTime(), playerUUID, adminUUID, log.getCheckResult().ordinal(), log.getCheckEndTime());
+            executeUpdate(connection, insertLogs, log.getCheckStartTime(), playerUUID, adminUUID, log.getCheckResult().ordinal(), log.getCheckEndTime());
 
             final SQLFunction<ResultSet, Integer> logIdFunction = resultSet -> {
                 resultSet.next();
                 return resultSet.getInt(logIdColumn);
             };
 
-            final int logId = sqlUtil.executeQuery(connection, logIdSql, logIdFunction, logIdParams);
+            final int logId = executeQuery(connection, logIdSql, logIdFunction, logIdParams);
 
             @Cleanup final PreparedStatement insertMessageStatement = connection.prepareStatement(insertMessages);
             connection.setAutoCommit(false);
 
             for (final MessageLog message : log.getMessageLogList()) {
-                sqlUtil.completionStatement(insertMessageStatement,
+                completionStatement(insertMessageStatement,
                         message.getMessage(),
                         message.getSenderUUID().toString().equals(playerUUID) ? playerUUID : adminUUID,
                         message.getSentTime(),
@@ -132,12 +144,6 @@ public abstract class SQLProvider extends Provider {
 
     public void createTable(final String logsTable, final String messagesLogTable) {
         final String prefix = databaseConfig.getPrefix();
-        selectPlayerUUID = String.format("SELECT uuid FROM %suser WHERE nickname = ? LIMIT 1;", prefix);
-        selectPlayerNickname = String.format("SELECT nickname FROM %suser WHERE uuid = ? LIMIT 1;", prefix);
-        selectMessages = String.format("SELECT * FROM %smessages_log WHERE log_id = ? ORDER BY sent_time ASC;", prefix);
-        selectLogs = String.format("SELECT * FROM %slogs WHERE player_uuid = ?;", prefix);
-        insertLogs = String.format("INSERT INTO %slogs (check_start_time, player_uuid, admin_uuid, check_result, check_end_time) VALUES (?, ?, ?, ?, ?);", prefix);
-        insertMessages = String.format("INSERT INTO %smessages_log (message, sender_uuid, sent_time, admin_message, log_id) VALUES (?, ?, ?, ?, ?);", prefix);
 
         final String userTable = "CREATE TABLE IF NOT EXISTS %suser\n" +
                 "(\n" +
@@ -145,7 +151,7 @@ public abstract class SQLProvider extends Provider {
                 "    uuid     CHAR(36)    NOT NULL UNIQUE PRIMARY KEY\n" +
                 ");";
 
-        sqlUtil.openConnection(connection -> {
+        openConnection(connection -> {
             @Cleanup final PreparedStatement userTableStatement = connection.prepareStatement(String.format(userTable, prefix));
             @Cleanup final PreparedStatement logsTableStatement = connection.prepareStatement(String.format(logsTable, prefix));
             @Cleanup final PreparedStatement messagesLogStatement = connection.prepareStatement(String.format(messagesLogTable, prefix));

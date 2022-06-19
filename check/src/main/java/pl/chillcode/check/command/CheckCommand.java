@@ -1,98 +1,52 @@
 package pl.chillcode.check.command;
 
-import com.google.common.collect.ImmutableMap;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import pl.chillcode.check.ChillCodeCheck;
 import pl.chillcode.check.command.sub.*;
 import pl.chillcode.check.config.Config;
 import pl.chillcode.check.model.CheckCache;
-import pl.crystalek.crcapi.message.MessageAPI;
+import pl.crystalek.crcapi.command.impl.Command;
+import pl.crystalek.crcapi.command.impl.MultiCommand;
+import pl.crystalek.crcapi.command.model.CommandData;
+import pl.crystalek.crcapi.message.api.MessageAPI;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public final class CheckCommand extends Command {
-    Map<String, SubCommand> subCommandMap = new HashMap<>();
-    Set<String> argumentList = new HashSet<>();
-    MessageAPI messageAPI;
+public final class CheckCommand extends MultiCommand {
 
-    public CheckCommand(final Config config, final CheckCache checkCache, final ChillCodeCheck plugin, final MessageAPI messageAPI) {
-        super(config.getPlayerCheckCommand());
-        setAliases(config.getPlayerCheckCommandAliases());
-        this.messageAPI = messageAPI;
+    public CheckCommand(final MessageAPI messageAPI, final Map<Class<? extends Command>, CommandData> commandDataMap, final CheckCache checkCache, final Config config, final ChillCodeCheck plugin) {
+        super(messageAPI, commandDataMap);
 
-        registerSubCommand("help", new HelpSubCommand(messageAPI), true);
-        registerSubCommand("setspawn", new SetSpawnSubCommand(config, messageAPI), true);
-        registerSubCommand("spawn", new SpawnSubCommand(config, messageAPI), true);
-        registerSubCommand("sprawdz", new CheckSubCommand(checkCache, config, messageAPI), true);
-        registerSubCommand("przyznanie", new AdmittingSubCommand(checkCache, config, messageAPI), true);
-        registerSubCommand("czysty", new ClearSubCommand(checkCache, config, messageAPI), true);
-        registerSubCommand("cheater", new CheaterSubCommand(checkCache, config, messageAPI), true);
-        registerSubCommand("reload", new ReloadSubCommand(plugin, messageAPI), true);
+        registerSubCommand(new AdmittingSubCommand(messageAPI, commandDataMap, checkCache, config));
+        registerSubCommand(new CheaterSubCommand(messageAPI, commandDataMap, checkCache, config));
+        registerSubCommand(new CheckSubCommand(messageAPI, commandDataMap, checkCache, config));
+        registerSubCommand(new ClearSubCommand(messageAPI, commandDataMap, checkCache, config));
+        registerSubCommand(new ReloadSubCommand(messageAPI, commandDataMap, plugin, config));
+        registerSubCommand(new SetSpawnSubCommand(messageAPI, commandDataMap, config));
+        registerSubCommand(new SpawnSubCommand(messageAPI, commandDataMap, config));
     }
 
     @Override
-    public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
-        if (!sender.hasPermission("chillcode.check.base")) {
-            messageAPI.sendMessage("noPermission", sender, ImmutableMap.of("{PERMISSION}", "chillcode.check.base"));
-            return true;
-        }
+    public String getPermission() {
+        return "chillcode.check.base";
+    }
 
-        final int argLength = args.length;
-        if (argLength == 0) {
-            messageAPI.sendMessage("usage", sender);
-            return true;
-        }
-
-        final String firstArgument = args[0].toLowerCase();
-        if (!subCommandMap.containsKey(firstArgument)) {
-            messageAPI.sendMessage("usage", sender);
-            return true;
-        }
-        final SubCommand subCommand = subCommandMap.get(firstArgument);
-
-        final String permission = subCommand.getPermission();
-        if (!sender.hasPermission(permission)) {
-            messageAPI.sendMessage("noPermission", sender, ImmutableMap.of("{PERMISSION}", permission));
-            return true;
-        }
-
-        if (argLength < subCommand.minArgumentLength() || argLength > subCommand.maxArgumentLength()) {
-            messageAPI.sendMessage(subCommand.usagePathMessage(), sender);
-            return true;
-        }
-
-        subCommand.execute(sender, args);
+    @Override
+    public boolean isUseConsole() {
         return true;
     }
 
     @Override
-    public List<String> tabComplete(final CommandSender sender, final String alias, final String[] args) throws IllegalArgumentException {
-        if (args.length == 1) {
-            return argumentList.stream().filter(argument -> argument.startsWith(args[0].toLowerCase())).collect(Collectors.toList());
-        }
-
-        if (args.length == 2) {
-            final String firstArgument = args[0].toLowerCase();
-            if (!subCommandMap.containsKey(firstArgument)) {
-                return new ArrayList<>();
-            }
-
-            return subCommandMap.get(firstArgument).tabComplete(sender, args);
-        }
-
-        return new ArrayList<>();
+    public String getCommandUsagePath() {
+        return "usage";
     }
 
-    public void registerSubCommand(final String argumentName, final SubCommand subCommand, final boolean addToArgumentList) {
-        subCommandMap.put(argumentName, subCommand);
+    @Override
+    public int maxArgumentLength() {
+        return 3;
+    }
 
-        if (addToArgumentList) {
-            argumentList.add(argumentName);
-        }
+    @Override
+    public int minArgumentLength() {
+        return 1;
     }
 }

@@ -10,8 +10,8 @@ import org.bukkit.event.HandlerList;
 import pl.chillcode.check.model.CheckResult;
 
 @Getter
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class CheckEndEvent extends Event {
     static HandlerList HANDLERS = new HandlerList();
     Player player;

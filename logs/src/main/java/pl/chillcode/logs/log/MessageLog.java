@@ -8,8 +8,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.UUID;
 
 @Getter
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class MessageLog {
     String message;
     UUID senderUUID;

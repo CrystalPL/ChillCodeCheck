@@ -5,16 +5,15 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.entity.Player;
 import pl.chillcode.logs.log.Log;
 import pl.chillcode.logs.storage.SQLProvider;
-import pl.crystalek.crcapi.storage.config.DatabaseConfig;
-import pl.crystalek.crcapi.storage.util.SQLUtil;
+import pl.crystalek.crcapi.database.config.DatabaseConfig;
+import pl.crystalek.crcapi.lib.hikari.HikariDataSource;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public final class MYSQLProvider extends SQLProvider {
-    String selectLastInsertLogId = "SELECT LAST_INSERT_ID();";
+public final class MySQLProvider extends SQLProvider {
     String insertUser;
 
-    public MYSQLProvider(final SQLUtil sqlUtil, final DatabaseConfig databaseConfig) {
-        super(sqlUtil, databaseConfig);
+    public MySQLProvider(final DatabaseConfig databaseConfig, final HikariDataSource database) {
+        super(databaseConfig, database);
 
         this.insertUser = String.format("INSERT INTO %suser (nickname, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname = ?;", databaseConfig.getPrefix());
         this.createTable();
@@ -22,12 +21,12 @@ public final class MYSQLProvider extends SQLProvider {
 
     @Override
     public void createUser(final Player player) {
-        sqlUtil.executeUpdateAndOpenConnection(insertUser, player.getName(), player.getUniqueId().toString(), player.getName());
+        executeUpdateAndOpenConnection(insertUser, player.getName(), player.getUniqueId().toString(), player.getName());
     }
 
     @Override
     public void saveLog(final Log log) {
-        saveLog(selectLastInsertLogId, "LAST_INSERT_ID()", log);
+        saveLog("SELECT LAST_INSERT_ID();", "LAST_INSERT_ID()", log);
     }
 
     @Override

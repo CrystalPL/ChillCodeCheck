@@ -9,19 +9,19 @@ import pl.chillcode.check.model.CheckResult;
 import pl.chillcode.logs.log.Log;
 import pl.chillcode.logs.log.MessageLog;
 import pl.chillcode.logs.storage.Provider;
+import pl.crystalek.crcapi.database.config.DatabaseConfig;
 import pl.crystalek.crcapi.lib.bson.Document;
 import pl.crystalek.crcapi.lib.mongodb.client.FindIterable;
 import pl.crystalek.crcapi.lib.mongodb.client.MongoCollection;
 import pl.crystalek.crcapi.lib.mongodb.client.MongoCursor;
 import pl.crystalek.crcapi.lib.mongodb.client.MongoDatabase;
-import pl.crystalek.crcapi.storage.config.DatabaseConfig;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
-public final class MongoProvider extends Provider {
+public final class MongoProvider implements Provider {
     final MessageLogDocumentComparator messageLogComparator = new MessageLogDocumentComparator();
     final MongoDatabase mongoDatabase;
     final DatabaseConfig databaseConfig;
